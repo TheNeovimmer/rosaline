@@ -7,6 +7,7 @@ use App\Core\Database;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Setting;
+use App\Models\Governorate;
 
 class CheckoutController extends Controller
 {
@@ -28,10 +29,11 @@ class CheckoutController extends Controller
         $codEnabled = Setting::get('cod_enabled') === '1';
 
         $this->view('front/checkout', [
-            'cart'       => $cart,
-            'total'      => $total,
-            'user'       => Auth::user(),
-            'cod'        => $codEnabled ? [
+            'cart'          => $cart,
+            'total'         => $total,
+            'user'          => Auth::user(),
+            'governorates'  => Governorate::getActive(),
+            'cod'           => $codEnabled ? [
                 'enabled'     => true,
                 'min_amount'  => (float) Setting::get('cod_min_amount', '0'),
                 'max_amount'  => (float) Setting::get('cod_max_amount', '0'),
@@ -54,11 +56,19 @@ class CheckoutController extends Controller
         }
 
         $errors = $this->validate($_POST, [
-            'address'  => 'required|min:10|max:500',
-            'city'     => 'required|min:2|max:100',
-            'zip'      => 'required|min:3|max:20',
-            'country'  => 'required|min:2|max:100',
+            'first_name' => 'required|min:1|max:100',
+            'last_name'  => 'required|min:1|max:100',
+            'address'    => 'required|min:5|max:500',
+            'phone'      => 'required|min:10|max:20',
         ]);
+
+        if (empty($_POST['governorate_id'])) {
+            $errors['governorate_id'][] = 'governorate_id is required';
+        }
+
+        if (!empty($_POST['phone']) && !isTunisianPhone($_POST['phone'])) {
+            $errors['phone'][] = 'phone must be a valid Tunisian number (+216XXXXXXXX)';
+        }
 
         if (!empty($errors)) {
             $this->withErrors($errors);
@@ -67,12 +77,38 @@ class CheckoutController extends Controller
             return;
         }
 
-        $total = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart));
+        $subtotal = array_sum(array_map(fn($item) => $item['price'] * $item['quantity'], $cart));
+        $shippingFee = Governorate::getShippingFee((int)$_POST['governorate_id']);
+        $freeThreshold = (float) Setting::get('shipping_free_threshold', '200');
+        if ($subtotal >= $freeThreshold) {
+            $shippingFee = 0;
+        }
+        $total = $subtotal + $shippingFee;
+
+        $codEnabled = Setting::get('cod_enabled') === '1';
+        if (!$codEnabled) {
+            $this->withErrors(['general' => ['COD is not available.']]);
+            $this->redirectBack();
+            return;
+        }
+        $minAmount = (float) Setting::get('cod_min_amount', '0');
+        $maxAmount = (float) Setting::get('cod_max_amount', '0');
+        if ($minAmount > 0 && $total < $minAmount) {
+            $this->withErrors(['general' => ['Minimum order amount is ' . formatPrice($minAmount) . '.']]);
+            $this->redirectBack();
+            return;
+        }
+        if ($maxAmount > 0 && $total > $maxAmount) {
+            $this->withErrors(['general' => ['Maximum order amount is ' . formatPrice($maxAmount) . '.']]);
+            $this->redirectBack();
+            return;
+        }
+
+        $address = ($_POST['first_name'] ?? '') . ' ' . ($_POST['last_name'] ?? '') . ', ' . ($_POST['address'] ?? '');
 
         Database::beginTransaction();
 
         try {
-            $address = ($_POST['address'] ?? '') . ', ' . ($_POST['city'] ?? '') . ', ' . ($_POST['zip'] ?? '') . ', ' . ($_POST['country'] ?? '');
             $orderNumber = 'ORD-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
 
             $orderId = Order::create([
@@ -82,9 +118,12 @@ class CheckoutController extends Controller
                 'status'           => 'pending',
                 'shipping_address' => $address,
                 'billing_address'  => $address,
-                'payment_method'   => $_POST['payment_method'] ?? 'cod',
+                'governorate_id'   => (int)$_POST['governorate_id'],
+                'shipping_fee'     => $shippingFee,
+                'phone'            => $_POST['phone'] ?? '',
+                'delivery_notes'   => $_POST['delivery_notes'] ?? '',
+                'payment_method'   => 'cod',
                 'payment_status'   => 'pending',
-                'notes'            => $_POST['notes'] ?? '',
             ]);
 
             foreach ($cart as $item) {
@@ -103,17 +142,20 @@ class CheckoutController extends Controller
                 );
             }
 
+            Database::query("INSERT INTO order_status_history (order_id, from_status, to_status, created_by) VALUES (?, NULL, 'pending', ?)", [$orderId, Auth::id()]);
+
             Database::commit();
             unset($_SESSION['cart']);
 
             $user = Auth::user();
             $body = '<p>Hi ' . e($user['name']) . ',</p><p>Your order <strong>#' . e($orderNumber) . '</strong> has been placed successfully.</p>';
-            $body .= '<p>Total: ' . formatPrice($total) . '</p><p>Payment: ' . ($_POST['payment_method'] === 'cod' ? 'Cash on Delivery' : 'Card') . '</p>';
+            $body .= '<p>Total: ' . formatPrice($total) . '</p>';
+            $body .= '<p>Payment: Cash on Delivery</p>';
             $body .= '<p>We will notify you when your order ships.</p>';
             send_mail($user['email'], 'Order Confirmation - ' . e($orderNumber), $body);
 
             $this->withSuccess('Order placed successfully!');
-            $this->redirect('/account/orders');
+            $this->redirect('/account/orders/' . $orderId);
         } catch (\Exception $e) {
             Database::rollback();
             $this->withErrors(['general' => ['Failed to place order. Please try again.']]);
