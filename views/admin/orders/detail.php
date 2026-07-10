@@ -21,8 +21,8 @@
             <div class="card-header bg-white fw-semibold">Shipping</div>
             <div class="card-body">
                 <p class="mb-1"><?= nl2br(e($order['shipping_address'] ?? '—')) ?></p>
-                <?php if (!empty($data['govName'])): ?>
-                <p class="mb-1"><strong>Governorate:</strong> <?= e($data['govName']) ?></p>
+                <?php if (!empty($data['gov_name'])): ?>
+                <p class="mb-1"><strong>Governorate:</strong> <?= e($data['gov_name']) ?></p>
                 <?php endif; ?>
                 <p class="mb-0"><strong>Shipping Fee:</strong> <?= formatPrice($order['shipping_fee'] ?? 0) ?></p>
                 <?php if (!empty($order['delivery_notes'])): ?>
@@ -129,11 +129,24 @@
             <div class="col-auto">
                 <select name="status" class="form-select">
                     <?php
-                    $statuses = ['confirmed', 'processing', 'shipped', 'delivered', 'cancelled'];
+                    $nextStatuses = match($order['status'] ?? 'pending') {
+                        'pending' => ['confirmed', 'cancelled'],
+                        'confirmed' => ['processing', 'cancelled'],
+                        'processing' => ['shipped', 'cancelled'],
+                        'shipped' => ['delivered', 'cancelled'],
+                        'delivered' => [],
+                        'cancelled' => [],
+                        'return_requested' => ['returned', 'delivered'],
+                        'returned' => [],
+                        default => []
+                    };
                     $current  = $order['status'] ?? 'pending';
-                    foreach ($statuses as $s): ?>
+                    foreach ($nextStatuses as $s): ?>
                         <option value="<?= $s ?>" <?= $s === $current ? 'selected' : '' ?>><?= ucfirst(str_replace('_', ' ', $s)) ?></option>
                     <?php endforeach; ?>
+                    <?php if (empty($nextStatuses)): ?>
+                        <option value="" disabled selected>No transitions available</option>
+                    <?php endif; ?>
                 </select>
             </div>
             <div class="col">
