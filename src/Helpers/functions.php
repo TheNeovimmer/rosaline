@@ -72,7 +72,26 @@ function send_mail(string $to, string $subject, string $body, string $from = '')
 
 function formatPrice(float $price): string
 {
-    return '$' . number_format($price, 2);
+    return number_format($price, 3, '.', '') . ' TND';
+}
+
+function isTunisianPhone(string $phone): bool
+{
+    return (bool)preg_match('/^\+216[2-9]\d{7}$/', $phone);
+}
+
+function governorateDropdown(int $selectedId = 0): string
+{
+    $db = App\Core\Database::getInstance();
+    $rows = $db->query("SELECT id, name_en FROM governorates WHERE is_active = 1 ORDER BY name_en")->fetchAll();
+    $html = '<select name="governorate_id" class="style-4" required>';
+    $html .= '<option value="">Select governorate</option>';
+    foreach ($rows as $row) {
+        $sel = (int)$row['id'] === $selectedId ? ' selected' : '';
+        $html .= '<option value="' . $row['id'] . '"' . $sel . '>' . htmlspecialchars($row['name_en']) . '</option>';
+    }
+    $html .= '</select>';
+    return $html;
 }
 
 function formatDate(string $date, string $format = 'M d, Y'): string
