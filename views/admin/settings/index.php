@@ -27,8 +27,8 @@ $codEnabled = ($settingMap['cod_enabled'] ?? '') === '1';
                 </div>
                 <?php elseif (in_array($key, ['cod_description'])): ?>
                 <textarea class="form-control" name="<?= e($key) ?>" rows="2"><?= e($settingMap[$key] ?? '') ?></textarea>
-                <?php elseif (in_array($key, ['cod_min_amount', 'cod_max_amount'])): ?>
-                <input type="number" step="0.01" min="0" class="form-control" name="<?= e($key) ?>" value="<?= e($settingMap[$key] ?? '') ?>">
+                <?php elseif (in_array($key, ['cod_min_amount', 'cod_max_amount', 'shipping_free_threshold'])): ?>
+                <input type="number" step="0.001" min="0" class="form-control" name="<?= e($key) ?>" value="<?= e($settingMap[$key] ?? '') ?>">
                 <?php elseif (in_array($key, ['store_address'])): ?>
                 <textarea class="form-control" name="<?= e($key) ?>" rows="2"><?= e($settingMap[$key] ?? '') ?></textarea>
                 <?php elseif ($key === 'store_email'): ?>
