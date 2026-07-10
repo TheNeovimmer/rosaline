@@ -6,6 +6,7 @@ use App\Core\Auth;
 use App\Models\Order;
 use App\Models\Wishlist;
 use App\Core\Database;
+use App\Models\Governorate;
 
 class AccountController extends Controller
 {
@@ -130,7 +131,20 @@ class AccountController extends Controller
     public function addresses(): void
     {
         $addresses = Database::fetchAll("SELECT * FROM addresses WHERE user_id = :uid ORDER BY is_default DESC, created_at DESC", ['uid' => Auth::id()]);
-        $this->view('front/account-addresses', ['addresses' => $addresses]);
+        // Fetch governorate names for display
+        foreach ($addresses as &$addr) {
+            if (!empty($addr['governorate_id'])) {
+                $g = Database::fetch("SELECT name_en FROM governorates WHERE id = ?", [$addr['governorate_id']]);
+                $addr['governorate_name'] = $g ? $g['name_en'] : '';
+            } else {
+                $addr['governorate_name'] = '';
+            }
+        }
+        unset($addr);
+        $this->view('front/account-addresses', [
+            'addresses'    => $addresses,
+            'governorates' => Governorate::getActive(),
+        ]);
     }
 
     public function createAddress(): void
@@ -138,9 +152,11 @@ class AccountController extends Controller
         $errors = $this->validate($_POST, [
             'full_name'     => 'required|min:2|max:255',
             'address_line1' => 'required|min:5|max:255',
-            'city'          => 'required|min:2|max:100',
-            'zip'           => 'required|min:3|max:20',
         ]);
+
+        if (empty($_POST['governorate_id'])) {
+            $errors['governorate_id'][] = 'governorate_id is required';
+        }
 
         if (!empty($errors)) {
             $this->withErrors($errors);
@@ -157,13 +173,14 @@ class AccountController extends Controller
         }
 
         Database::query(
-            "INSERT INTO addresses (user_id, label, full_name, phone, address_line1, address_line2, city, state, zip, country, is_default) VALUES (:uid, :label, :name, :phone, :line1, :line2, :city, :state, :zip, :country, :def)",
+            "INSERT INTO addresses (user_id, label, full_name, phone, address_line1, address_line2, city, governorate_id, country, is_default) VALUES (:uid, :label, :name, :phone, :line1, :line2, :city, :gov, :country, :def)",
             [
                 'uid' => $uid, 'label' => $_POST['label'] ?? 'Home',
                 'name' => $_POST['full_name'], 'phone' => $_POST['phone'] ?? '',
                 'line1' => $_POST['address_line1'], 'line2' => $_POST['address_line2'] ?? '',
-                'city' => $_POST['city'], 'state' => $_POST['state'] ?? '',
-                'zip' => $_POST['zip'], 'country' => $_POST['country'] ?? 'US',
+                'city' => $_POST['city'] ?? '',
+                'gov' => (int)$_POST['governorate_id'],
+                'country' => 'TN',
                 'def' => $isDefault,
             ]
         );
@@ -183,13 +200,14 @@ class AccountController extends Controller
         }
 
         Database::query(
-            "UPDATE addresses SET label=:label, full_name=:name, phone=:phone, address_line1=:line1, address_line2=:line2, city=:city, state=:state, zip=:zip, country=:country, is_default=:def WHERE id=:id",
+            "UPDATE addresses SET label=:label, full_name=:name, phone=:phone, address_line1=:line1, address_line2=:line2, city=:city, governorate_id=:gov, country=:country, is_default=:def WHERE id=:id",
             [
                 'id' => $id, 'label' => $_POST['label'] ?? 'Home',
                 'name' => $_POST['full_name'], 'phone' => $_POST['phone'] ?? '',
                 'line1' => $_POST['address_line1'], 'line2' => $_POST['address_line2'] ?? '',
-                'city' => $_POST['city'], 'state' => $_POST['state'] ?? '',
-                'zip' => $_POST['zip'], 'country' => $_POST['country'] ?? 'US',
+                'city' => $_POST['city'] ?? '',
+                'gov' => (int)($_POST['governorate_id'] ?? $addr['governorate_id']),
+                'country' => 'TN',
                 'def' => $isDefault,
             ]
         );

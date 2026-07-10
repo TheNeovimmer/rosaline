@@ -29,6 +29,7 @@
             <div class="col-lg-8 col-xl-9">
                 <div class="my-account-content">
                     <?php $success = \App\Core\Session::getFlash('success'); if ($success): ?><div class="alert alert-success py-2"><?= e($success) ?></div><?php endif; ?>
+                    <?php if (!empty($data['errors'])): ?><div class="alert alert-danger py-2"><?= implode('<br>', array_map('e', $data['errors'])) ?></div><?php endif; ?>
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h6 class="font-instrument_serif mb-0">Saved Addresses</h6>
                         <button class="tf-btn style-2 btn-sm" data-bs-toggle="modal" data-bs-target="#addAddressModal">Add New</button>
@@ -45,8 +46,8 @@
                                         <?php if ($addr['is_default']): ?><span class="badge bg-success">Default</span><?php endif; ?>
                                     </div>
                                     <p class="fw-normal mb-1"><?= e($addr['full_name']) ?></p>
-                                    <p class="text-body-s cl-text-5 mb-1"><?= e($addr['phone']) ?></p>
-                                    <p class="text-body-s cl-text-5 mb-2"><?= e($addr['address_line1']) ?><?= $addr['address_line2'] ? ', ' . e($addr['address_line2']) : '' ?><br><?= e($addr['city']) ?>, <?= e($addr['state']) ?> <?= e($addr['zip']) ?></p>
+                                    <p class="text-body-s cl-text-5 mb-1"><?= e($addr['phone'] ?? '-') ?></p>
+                                    <p class="text-body-s cl-text-5 mb-2"><?= e($addr['address_line1']) ?><?= $addr['address_line2'] ? ', ' . e($addr['address_line2']) : '' ?><br><?= e($addr['city'] ?? '') ?><?= !empty($addr['governorate_name']) ? ', ' . e($addr['governorate_name']) : '' ?></p>
                                     <div class="d-flex gap-2">
                                         <?php if (!$addr['is_default']): ?>
                                         <form method="post" action="<?= url('account/addresses/' . $addr['id'] . '/default') ?>"><?= csrf_field() ?>
@@ -79,13 +80,19 @@
                     <div class="row">
                         <div class="col-md-6 mb-3"><label class="form-label">Label</label><select name="label" class="form-select"><option>Home</option><option>Work</option><option>Other</option></select></div>
                         <div class="col-md-6 mb-3"><label class="form-label">Full Name</label><input type="text" name="full_name" class="form-control" required></div>
-                        <div class="col-md-6 mb-3"><label class="form-label">Phone</label><input type="text" name="phone" class="form-control"></div>
-                        <div class="col-md-6 mb-3"><label class="form-label">Country</label><input type="text" name="country" class="form-control" value="US"></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">Phone (+216)</label><input type="tel" name="phone" class="form-control" placeholder="+216 XX XXX XXX" pattern="^\+216[2-9]\d{7}$"></div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Governorate</label>
+                            <select name="governorate_id" class="form-select" required>
+                                <option value="">Select governorate</option>
+                                <?php foreach ($data['governorates'] as $g): ?>
+                                <option value="<?= $g['id'] ?>"><?= e($g['name_en']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
                         <div class="col-12 mb-3"><label class="form-label">Address Line 1</label><input type="text" name="address_line1" class="form-control" required></div>
                         <div class="col-12 mb-3"><label class="form-label">Address Line 2</label><input type="text" name="address_line2" class="form-control"></div>
-                        <div class="col-md-4 mb-3"><label class="form-label">City</label><input type="text" name="city" class="form-control" required></div>
-                        <div class="col-md-4 mb-3"><label class="form-label">State</label><input type="text" name="state" class="form-control"></div>
-                        <div class="col-md-4 mb-3"><label class="form-label">ZIP Code</label><input type="text" name="zip" class="form-control" required></div>
+                        <div class="col-md-6 mb-3"><label class="form-label">City</label><input type="text" name="city" class="form-control"></div>
                         <div class="col-12 mb-3"><div class="form-check"><input type="checkbox" name="is_default" class="form-check-input" id="isDefault"><label class="form-check-label" for="isDefault">Set as default address</label></div></div>
                     </div>
                 </div>
