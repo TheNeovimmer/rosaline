@@ -9,6 +9,8 @@ $totalCod      = $data['totalCod'] ?? 0;
 $pendingCod    = $data['pendingCod'] ?? 0;
 $collectedCod  = $data['collectedCod'] ?? 0;
 $todayCodRevenue = $data['todayCodRevenue'] ?? 0;
+$pendingReturns = $data['pendingReturns'] ?? 0;
+$pendingOrders = $data['pendingOrders'] ?? 0;
 $paymentBreakdown = $data['paymentBreakdown'] ?? [];
 $recentOrders  = $data['recentOrders'] ?? [];
 $monthlyRevenue = $data['monthlyRevenue'] ?? [];
@@ -66,31 +68,31 @@ $paymentColors = ['cod' => '#059669', 'credit-card' => '#2563eb', 'paypal' => '#
     </div>
     <div class="col-xl-3 col-md-6">
         <div class="stat-card stat-sm">
-            <div class="stat-icon gradient-green"><i class="icon icon-Payment"></i></div>
-            <div class="stat-info">
-                <div class="stat-label">COD Orders</div>
-                <div class="stat-value"><?= $totalCod ?></div>
-                <div class="stat-sub"><?= formatPrice($collectedCod) ?> collected</div>
-            </div>
-        </div>
-    </div>
-    <div class="col-xl-3 col-md-6">
-        <div class="stat-card stat-sm">
             <div class="stat-icon gradient-amber"><i class="icon icon-Timer"></i></div>
             <div class="stat-info">
-                <div class="stat-label">Pending COD</div>
-                <div class="stat-value"><?= $pendingCod ?></div>
-                <div class="stat-sub">awaiting payment</div>
+                <div class="stat-label">Pending</div>
+                <div class="stat-value"><?= $pendingOrders ?></div>
+                <div class="stat-sub"><a href="<?= url('admin/orders?status=pending') ?>">awaiting confirmation</a></div>
             </div>
         </div>
     </div>
     <div class="col-xl-3 col-md-6">
         <div class="stat-card stat-sm">
-            <div class="stat-icon gradient-purple"><i class="icon icon-Sparkle"></i></div>
+            <div class="stat-icon gradient-purple"><i class="icon icon-Refresh"></i></div>
             <div class="stat-info">
-                <div class="stat-label">COD Revenue</div>
-                <div class="stat-value"><?= formatPrice($todayCodRevenue) ?></div>
-                <div class="stat-sub">today</div>
+                <div class="stat-label">Return Requests</div>
+                <div class="stat-value"><?= $pendingReturns ?></div>
+                <div class="stat-sub"><a href="<?= url('admin/return-requests') ?>">pending review</a></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card stat-sm">
+            <div class="stat-icon gradient-green"><i class="icon icon-Payment"></i></div>
+            <div class="stat-info">
+                <div class="stat-label">Orders (COD)</div>
+                <div class="stat-value"><?= $totalCod ?></div>
+                <div class="stat-sub"><?= formatPrice($collectedCod) ?> collected</div>
             </div>
         </div>
     </div>
@@ -131,8 +133,9 @@ $paymentColors = ['cod' => '#059669', 'credit-card' => '#2563eb', 'paypal' => '#
                 <?php foreach ($ordersByStatus as $s): ?>
                 <?php
                 $color = match($s['status']) {
-                    'pending' => 'warning', 'processing' => 'info', 'shipped' => 'primary',
-                    'delivered' => 'success', 'cancelled' => 'danger', default => 'secondary'
+                    'pending' => 'warning', 'confirmed' => 'info', 'processing' => 'info', 'shipped' => 'primary',
+                    'delivered' => 'success', 'cancelled' => 'danger', 'return_requested' => 'warning', 'returned' => 'secondary',
+                    default => 'secondary'
                 };
                 $total = array_sum(array_column($ordersByStatus, 'count'));
                 $pct = $total > 0 ? round(($s['count'] / $total) * 100) : 0;
@@ -182,10 +185,10 @@ $paymentColors = ['cod' => '#059669', 'credit-card' => '#2563eb', 'paypal' => '#
     </div>
     <div class="col-lg-6">
         <div class="card-admin h-100">
-            <div class="card-header"><span>Pending COD</span><a href="<?= url('admin/orders?payment_method=cod&payment_status=pending') ?>" class="btn-admin btn-admin-sm">View All</a></div>
+            <div class="card-header"><span>Pending Orders</span><a href="<?= url('admin/orders?status=pending') ?>" class="btn-admin btn-admin-sm">View All</a></div>
             <div class="card-body p-0">
                 <?php if (empty($pendingCodOrders)): ?>
-                <div class="empty-state"><div class="empty-icon"><i class="icon icon-CircleCheck" style="color:var(--admin-success);"></i></div><p>All COD payments cleared.</p></div>
+                <div class="empty-state"><div class="empty-icon"><i class="icon icon-CircleCheck" style="color:var(--admin-success);"></i></div><p>No pending orders.</p></div>
                 <?php else: ?>
                 <div class="table-responsive-wrap">
                 <table class="table-admin mb-0 w-100">
@@ -227,7 +230,7 @@ $paymentColors = ['cod' => '#059669', 'credit-card' => '#2563eb', 'paypal' => '#
                             <td><?= e($o['user_name'] ?? '—') ?></td>
                             <td><?= formatPrice($o['total'] ?? 0) ?></td>
                             <td><span class="pm-dot-sm <?= ($o['payment_method'] ?? '') === 'cod' ? 'dot-cod' : 'dot-card' ?>"></span><?= ($o['payment_method'] ?? '—') === 'cod' ? 'COD' : 'Card' ?></td>
-                            <td><span class="badge-admin status-<?= $o['status'] ?? 'pending' ?>"><?= e($o['status'] ?? '—') ?></span></td>
+                            <td><span class="badge-admin status-<?= $o['status'] ?? 'pending' ?>"><?= e(ucfirst(str_replace('_', ' ', $o['status'] ?? 'pending'))) ?></span></td>
                             <td style="white-space:nowrap;"><?= formatDate($o['created_at'] ?? '', 'M d, Y') ?></td>
                         </tr>
                         <?php endforeach; ?>

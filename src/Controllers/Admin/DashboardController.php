@@ -58,8 +58,11 @@ class DashboardController extends Controller
              ORDER BY count DESC"
         );
 
+        $pendingReturns = (int) (Database::fetch("SELECT COUNT(*) as cnt FROM orders WHERE status = 'return_requested'")['cnt'] ?? 0);
+        $pendingOrders = (int) (Database::fetch("SELECT COUNT(*) as cnt FROM orders WHERE status = 'pending'")['cnt'] ?? 0);
+
         $lowStockProducts = Database::fetchAll(
-            "SELECT id, name, stock_quantity FROM products WHERE stock_quantity <= 10 ORDER BY stock_quantity ASC LIMIT 5"
+            "SELECT id, name, stock_quantity, low_stock_threshold FROM products WHERE stock_quantity <= COALESCE(low_stock_threshold, 5) ORDER BY stock_quantity ASC LIMIT 5"
         );
 
         $topProducts = Database::fetchAll(
@@ -108,6 +111,8 @@ class DashboardController extends Controller
             'topProducts'       => $topProducts,
             'recentActivity'    => $recentActivity,
             'pendingCodOrders'  => $pendingCodOrders,
+            'pendingReturns'    => $pendingReturns,
+            'pendingOrders'     => $pendingOrders,
         ], 'admin');
     }
 }
