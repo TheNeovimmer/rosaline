@@ -83,6 +83,10 @@ $router->group(['App\Middleware\AdminMiddleware'], function (Router $router) {
     $router->get('/admin/orders/{id}', ['App\Controllers\Admin\OrderController', 'show']);
     $router->post('/admin/orders/{id}/status', ['App\Controllers\Admin\OrderController', 'updateStatus']);
 
+    $router->get('/admin/return-requests', ['App\Controllers\Admin\ReturnRequestController', 'index']);
+    $router->post('/admin/return-requests/{id}/approve', ['App\Controllers\Admin\ReturnRequestController', 'approve']);
+    $router->post('/admin/return-requests/{id}/reject', ['App\Controllers\Admin\ReturnRequestController', 'reject']);
+
     $router->get('/admin/users', ['App\Controllers\Admin\UserController', 'index']);
     $router->get('/admin/users/{id}/edit', ['App\Controllers\Admin\UserController', 'edit']);
     $router->post('/admin/users/{id}/edit', ['App\Controllers\Admin\UserController', 'update']);

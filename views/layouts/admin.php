@@ -63,6 +63,7 @@
             <a href="<?= url('admin/products') ?>" class="<?= str_contains($_SERVER['REQUEST_URI'], '/admin/products') ? 'active' : '' ?>"><i class="icon icon-Box"></i> <span>Products</span></a>
             <a href="<?= url('admin/categories') ?>" class="<?= str_contains($_SERVER['REQUEST_URI'], '/admin/categories') ? 'active' : '' ?>"><i class="icon icon-Grid2"></i> <span>Categories</span></a>
             <a href="<?= url('admin/orders') ?>" class="<?= str_contains($_SERVER['REQUEST_URI'], '/admin/orders') ? 'active' : '' ?>"><i class="icon icon-Truck"></i> <span>Orders</span></a>
+            <a href="<?= url('admin/return-requests') ?>" class="<?= str_contains($_SERVER['REQUEST_URI'], '/admin/return-requests') ? 'active' : '' ?>"><i class="icon icon-Refresh"></i> <span>Returns</span></a>
             <a href="<?= url('admin/users') ?>" class="<?= str_contains($_SERVER['REQUEST_URI'], '/admin/users') ? 'active' : '' ?>"><i class="icon icon-UserCircle"></i> <span>Users</span></a>
 
             <div class="sidebar-label collapse-label">Content</div>
