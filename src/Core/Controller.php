@@ -88,6 +88,16 @@ abstract class Controller
         $_SESSION['_flash']['success'] = $message;
     }
 
+    protected function adminView(string $view, array $data = []): void
+    {
+        View::render($view, $data, 'admin');
+    }
+
+    protected function withError(string $message): void
+    {
+        $_SESSION['_flash']['errors']['general'][] = $message;
+    }
+
     protected function logActivity(string $action, string $entityType, ?int $entityId = null, string $details = ''): void
     {
         if ($userId = Auth::id()) {
