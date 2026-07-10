@@ -38,7 +38,8 @@ $stockFilter = $_GET['stock'] ?? '';
                     <td><a href="<?= url('admin/products/' . $p['id'] . '/edit') ?>" class="text-dark"><?= e($p['name']) ?></a></td>
                     <td style="font-size:13px;color:#888;"><?= e($p['sku'] ?? '—') ?></td>
                     <td><?= formatPrice($p['price'] ?? 0) ?></td>
-                    <td><span class="badge bg-<?= ($p['stock_quantity'] ?? 0) <= 0 ? 'danger' : (($p['stock_quantity'] ?? 0) <= 10 ? 'warning' : 'success') ?>"><?= (int) ($p['stock_quantity'] ?? 0) ?></span></td>
+                    <?php $threshold = $p['low_stock_threshold'] ?? 5; ?>
+                    <td><span class="badge bg-<?= ($p['stock_quantity'] ?? 0) <= 0 ? 'danger' : (($p['stock_quantity'] ?? 0) <= $threshold ? 'warning' : 'success') ?>"><?= (int) ($p['stock_quantity'] ?? 0) ?></span></td>
                     <td><span class="badge bg-<?= ($p['status'] ?? '') === 'active' ? 'success' : 'secondary' ?>"><?= e(ucfirst($p['status'] ?? 'inactive')) ?></span></td>
                     <td>
                         <a href="<?= url('admin/products/' . $p['id'] . '/edit') ?>" class="btn btn-outline-secondary btn-sm me-1">Edit</a>

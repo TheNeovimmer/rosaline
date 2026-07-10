@@ -45,9 +45,13 @@ $action     = $isEdit ? url('admin/products/' . $product['id'] . '/edit') : url(
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <label class="form-label">Stock Quantity</label>
                     <input type="number" name="stock_quantity" class="form-control" value="<?= (int)($product['stock_quantity'] ?? $product['stock'] ?? 0) ?>">
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label class="form-label">Low Stock Alert</label>
+                    <input type="number" name="low_stock_threshold" class="form-control" value="<?= (int)($product['low_stock_threshold'] ?? 5) ?>" min="1">
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="form-label">Status</label>

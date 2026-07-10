@@ -28,7 +28,7 @@ class ProductController extends Controller
         }
 
         if ($stockFilter === 'low') {
-            $where .= ' AND stock_quantity <= 10 AND stock_quantity > 0';
+            $where .= ' AND stock_quantity <= COALESCE(low_stock_threshold, 5) AND stock_quantity > 0';
         } elseif ($stockFilter === 'out') {
             $where .= ' AND (stock_quantity IS NULL OR stock_quantity <= 0)';
         }
@@ -88,9 +88,10 @@ class ProductController extends Controller
             'short_description'=> $_POST['short_description'] ?? '',
             'compare_price'    => !empty($_POST['compare_price']) ? (float) $_POST['compare_price'] : null,
             'sku'              => $_POST['sku'] ?? '',
-            'stock_quantity'   => (int) ($_POST['stock_quantity'] ?? 0),
-            'featured'         => (int) ($_POST['featured'] ?? 0),
-            'status'           => !empty($_POST['active']) ? 'active' : 'inactive',
+            'stock_quantity'     => (int) ($_POST['stock_quantity'] ?? 0),
+            'low_stock_threshold'=> max(1, (int) ($_POST['low_stock_threshold'] ?? 5)),
+            'featured'           => (int) ($_POST['featured'] ?? 0),
+            'status'             => !empty($_POST['active']) ? 'active' : 'inactive',
         ];
 
         if (!empty($_FILES['image']['name'])) {
@@ -166,9 +167,10 @@ class ProductController extends Controller
             'short_description'=> $_POST['short_description'] ?? '',
             'compare_price'    => !empty($_POST['compare_price']) ? (float) $_POST['compare_price'] : null,
             'sku'              => $_POST['sku'] ?? '',
-            'stock_quantity'   => (int) ($_POST['stock_quantity'] ?? 0),
-            'featured'         => (int) ($_POST['featured'] ?? 0),
-            'status'           => !empty($_POST['active']) ? 'active' : 'inactive',
+            'stock_quantity'     => (int) ($_POST['stock_quantity'] ?? 0),
+            'low_stock_threshold'=> max(1, (int) ($_POST['low_stock_threshold'] ?? 5)),
+            'featured'           => (int) ($_POST['featured'] ?? 0),
+            'status'             => !empty($_POST['active']) ? 'active' : 'inactive',
         ];
 
         if (!empty($_FILES['image']['name'])) {

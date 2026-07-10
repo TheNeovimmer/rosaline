@@ -8,11 +8,10 @@ class Product extends Model
 {
     protected static string $table = 'products';
 
-    public static function getLowStock(int $threshold = 10): array
+    public static function getLowStock(): array
     {
         return Database::fetchAll(
-            "SELECT * FROM " . static::$table . " WHERE stock_quantity <= :threshold ORDER BY stock_quantity ASC LIMIT 10",
-            ['threshold' => $threshold]
+            "SELECT * FROM " . static::$table . " WHERE stock_quantity <= COALESCE(low_stock_threshold, 5) ORDER BY stock_quantity ASC LIMIT 10"
         );
     }
 
