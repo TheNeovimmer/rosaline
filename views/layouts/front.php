@@ -97,25 +97,13 @@
                                             <a href="<?= url('shop') ?>" class="item-link"><span class="text">SHOP</span></a>
                                         </li>
                                         <li class="menu-item">
-                                            <a href="<?= url('product/aha-glow-serum-10') ?>" class="item-link"><span class="text">PRODUCT</span></a>
-                                        </li>
-                                        <li class="menu-item">
                                             <a href="<?= url('blog') ?>" class="item-link"><span class="text">BLOG</span></a>
                                         </li>
-                                        <li class="menu-item position-relative">
-                                            <a href="#" class="item-link">
-                                                <span class="text">PAGES</span>
-                                                <i class="icon icon-ArrowCaretDown"></i>
-                                            </a>
-                                            <div class="sub-menu sub-menu_v2">
-                                                <ul class="sub-menu_list">
-                                                    <li><a href="<?= url('about') ?>" class="sub-menu_link"><span class="text">About</span></a></li>
-                                                    <li><a href="<?= url('contact') ?>" class="sub-menu_link"><span class="text">Contact</span></a></li>
-                                                    <li><a href="<?= url('faqs') ?>" class="sub-menu_link"><span class="text">FAQs</span></a></li>
-                                                    <li><a href="<?= url('privacy-policy') ?>" class="sub-menu_link"><span class="text">Privacy Policy</span></a></li>
-                                                    <li><a href="<?= url('terms-of-service') ?>" class="sub-menu_link"><span class="text">Term of Service</span></a></li>
-                                                </ul>
-                                            </div>
+                                        <li class="menu-item">
+                                            <a href="<?= url('about') ?>" class="item-link"><span class="text">ABOUT</span></a>
+                                        </li>
+                                        <li class="menu-item">
+                                            <a href="<?= url('contact') ?>" class="item-link"><span class="text">CONTACT</span></a>
                                         </li>
                                     </ul>
                                 </nav>

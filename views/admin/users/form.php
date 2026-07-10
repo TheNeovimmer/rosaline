@@ -9,6 +9,7 @@ $errors = $data['errors'] ?? [];
             <div class="alert alert-danger py-2"><?= implode('<br>', array_map('e', $errors)) ?></div>
         <?php endif; ?>
         <form method="post" action="<?= url('admin/users/' . $user['id'] . '/edit') ?>">
+            <?= csrf_field() ?>
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label class="form-label">Name</label>

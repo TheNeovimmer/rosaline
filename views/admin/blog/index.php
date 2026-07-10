@@ -27,7 +27,7 @@
                     <td style="white-space:nowrap;"><?= formatDate($p['published_at'] ?? $p['created_at'], 'M d, Y') ?></td>
                     <td>
                         <a href="<?= url('admin/blog/' . $p['id'] . '/edit') ?>" class="btn btn-outline-dark btn-sm">Edit</a>
-                        <form method="post" action="<?= url('admin/blog/' . $p['id'] . '/delete') ?>" style="display:inline" onsubmit="return confirm('Delete this post?')">
+                        <form method="post" action="<?= url('admin/blog/' . $p['id'] . '/delete') ?>" style="display:inline" onsubmit="return confirm('Delete this post?')"><?= csrf_field() ?>
                             <button class="btn btn-outline-danger btn-sm">Delete</button>
                         </form>
                     </td>

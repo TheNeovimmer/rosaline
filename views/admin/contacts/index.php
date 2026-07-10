@@ -25,7 +25,7 @@
                     <td><?= $m['is_read'] ? '<span class="badge bg-secondary">Read</span>' : '<span class="badge bg-warning">New</span>' ?></td>
                     <td>
                         <a href="<?= url('admin/contacts/' . $m['id']) ?>" class="btn btn-outline-dark btn-sm">View</a>
-                        <form method="post" action="<?= url('admin/contacts/' . $m['id'] . '/delete') ?>" style="display:inline" onsubmit="return confirm('Delete this message?')">
+                        <form method="post" action="<?= url('admin/contacts/' . $m['id'] . '/delete') ?>" style="display:inline" onsubmit="return confirm('Delete this message?')"><?= csrf_field() ?>
                             <button class="btn btn-outline-danger btn-sm">Delete</button>
                         </form>
                     </td>

@@ -26,6 +26,7 @@
                             <td>
                                 <a href="<?= url('admin/categories/' . $c['id'] . '/edit') ?>" class="btn btn-outline-secondary btn-sm me-1">Edit</a>
                                 <form method="post" action="<?= url('admin/categories/' . $c['id'] . '/delete') ?>" class="d-inline" onsubmit="return confirm('Delete this category?')">
+                                    <?= csrf_field() ?>
                                     <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
                                 </form>
                             </td>

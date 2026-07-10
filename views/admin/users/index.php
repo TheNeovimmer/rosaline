@@ -32,6 +32,7 @@ $pagination = $data['pagination'] ?? [];
                         <a href="<?= url('admin/users/' . $u['id'] . '/edit') ?>" class="btn btn-outline-secondary btn-sm me-1">Edit</a>
                         <?php if ((int)$u['id'] !== (int)$currentId): ?>
                         <form method="post" action="<?= url('admin/users/' . $u['id'] . '/delete') ?>" class="d-inline" onsubmit="return confirm('Delete this user?')">
+                            <?= csrf_field() ?>
                             <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
                         </form>
                         <?php endif; ?>

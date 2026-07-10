@@ -125,6 +125,7 @@
     <div class="card-header bg-white fw-semibold">Update Status</div>
     <div class="card-body">
         <form method="post" action="<?= url('admin/orders/' . $order['id'] . '/status') ?>" class="row g-2 align-items-end">
+            <?= csrf_field() ?>
             <div class="col-auto">
                 <select name="status" class="form-select">
                     <?php

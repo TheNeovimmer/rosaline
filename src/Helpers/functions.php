@@ -45,6 +45,31 @@ function truncate(string $text, int $length = 100): string
     return mb_substr($text, 0, $length) . '...';
 }
 
+function csrf_token(): string
+{
+    if (!isset($_SESSION['_csrf_token'])) {
+        $_SESSION['_csrf_token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['_csrf_token'];
+}
+
+function csrf_field(): string
+{
+    return '<input type="hidden" name="_csrf" value="' . csrf_token() . '">';
+}
+
+function send_mail(string $to, string $subject, string $body, string $from = ''): bool
+{
+    if ($from === '') {
+        $from = 'noreply@rosaline.com';
+    }
+    $headers = "MIME-Version: 1.0\r\n";
+    $headers .= "Content-Type: text/html; charset=utf-8\r\n";
+    $headers .= "From: " . $from . "\r\n";
+    $headers .= "Reply-To: " . $from . "\r\n";
+    return mail($to, '=?UTF-8?B?' . base64_encode($subject) . '?=', $body, $headers);
+}
+
 function formatPrice(float $price): string
 {
     return '$' . number_format($price, 2);

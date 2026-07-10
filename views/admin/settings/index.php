@@ -8,6 +8,7 @@ $codEnabled = ($settingMap['cod_enabled'] ?? '') === '1';
 <h5 class="fw-normal mb-3">Settings</h5>
 
 <form method="post" action="<?= url('admin/settings') ?>">
+<?= csrf_field() ?>
 <?php foreach ($groups as $groupName => $keys): ?>
 <div class="card border-0 shadow-sm mb-3">
     <div class="card-header bg-white fw-semibold"><?= e($groupName) ?></div>

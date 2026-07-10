@@ -4,6 +4,8 @@ use App\Core\Session;
 
 /** @var Router $router */
 
+$router->group(['App\Middleware\CsrfMiddleware'], function (Router $router) {
+
 $router->get('/', ['App\Controllers\HomeController', 'index']);
 $router->get('/shop', ['App\Controllers\ShopController', 'index']);
 $router->get('/shop/category/{slug}', ['App\Controllers\ShopController', 'category']);
@@ -23,6 +25,10 @@ $router->post('/login', ['App\Controllers\AuthController', 'login']);
 $router->get('/register', ['App\Controllers\AuthController', 'registerForm']);
 $router->post('/register', ['App\Controllers\AuthController', 'register']);
 $router->get('/logout', ['App\Controllers\AuthController', 'logout']);
+$router->get('/forgot-password', ['App\Controllers\AuthController', 'forgotPasswordForm']);
+$router->post('/forgot-password', ['App\Controllers\AuthController', 'forgotPassword']);
+$router->get('/reset-password', ['App\Controllers\AuthController', 'resetPasswordForm']);
+$router->post('/reset-password', ['App\Controllers\AuthController', 'resetPassword']);
 
 $router->group(['App\Middleware\AuthMiddleware'], function (Router $router) {
     $router->get('/account', ['App\Controllers\AccountController', 'index']);
@@ -110,4 +116,6 @@ $router->group(['App\Middleware\AdminMiddleware'], function (Router $router) {
     $router->post('/admin/settings', ['App\Controllers\Admin\SettingController', 'update']);
 
     $router->get('/admin/activity', ['App\Controllers\Admin\ActivityController', 'index']);
+});
+
 });

@@ -3,6 +3,7 @@
     <span class="br-line fake-class top-0 bg-line-5"></span>
     <div class="col-left flat-spacing-2">
         <form class="content-left" action="<?= url('checkout/place') ?>" method="POST">
+            <?= csrf_field() ?>
             <div class="express-checkout">
                 <p class="text-body-s text-center mb-24">Express checkout</p>
                 <div class="list-express tf-grid-layout tf-col-2 sm-col-4 gap-8">

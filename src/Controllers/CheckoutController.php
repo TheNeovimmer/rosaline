@@ -94,11 +94,23 @@ class CheckoutController extends Controller
                     'product_name'  => $item['name'],
                     'product_price' => $item['price'],
                     'quantity'      => $item['quantity'],
+                    'subtotal'      => $item['price'] * $item['quantity'],
                 ]);
+
+                Database::query(
+                    "UPDATE products SET stock_quantity = GREATEST(0, stock_quantity - :qty) WHERE id = :pid AND stock_quantity >= :qty2",
+                    ['qty' => $item['quantity'], 'pid' => $item['product_id'], 'qty2' => $item['quantity']]
+                );
             }
 
             Database::commit();
             unset($_SESSION['cart']);
+
+            $user = Auth::user();
+            $body = '<p>Hi ' . e($user['name']) . ',</p><p>Your order <strong>#' . e($orderNumber) . '</strong> has been placed successfully.</p>';
+            $body .= '<p>Total: ' . formatPrice($total) . '</p><p>Payment: ' . ($_POST['payment_method'] === 'cod' ? 'Cash on Delivery' : 'Card') . '</p>';
+            $body .= '<p>We will notify you when your order ships.</p>';
+            send_mail($user['email'], 'Order Confirmation - ' . e($orderNumber), $body);
 
             $this->withSuccess('Order placed successfully!');
             $this->redirect('/account/orders');

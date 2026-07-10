@@ -7,8 +7,9 @@ use App\Models\Category;
 
 class ShopController extends Controller
 {
-    public function index(int $page = 1): void
+    public function index(): void
     {
+        $page = max(1, (int) ($_GET['page'] ?? 1));
         $search = trim($_GET['search'] ?? '');
         $categoryId = (int) ($_GET['category'] ?? 0);
         $sort = $_GET['sort'] ?? 'newest';
@@ -62,13 +63,14 @@ class ShopController extends Controller
 
     public function category(string $slug): void
     {
+        $page = max(1, (int) ($_GET['page'] ?? 1));
         $category = Category::findBySlug($slug);
         if (!$category) {
             $this->redirect('/shop');
             return;
         }
 
-        $result = Product::paginate(1, 12, "category_id = :category_id AND status = 'active'", ['category_id' => $category['id']]);
+        $result = Product::paginate($page, 12, "category_id = :category_id AND status = 'active'", ['category_id' => $category['id']]);
         $categories = Category::all();
 
         $this->view('front/shop', [

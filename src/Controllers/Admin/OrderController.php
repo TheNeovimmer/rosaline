@@ -3,6 +3,7 @@ namespace App\Controllers\Admin;
 
 use App\Core\Controller;
 use App\Core\Auth;
+use App\Core\Database;
 use App\Models\Order;
 
 class OrderController extends Controller
@@ -96,6 +97,16 @@ class OrderController extends Controller
             $this->withErrors(['status' => ['Invalid order status']]);
             $this->redirectBack();
             return;
+        }
+
+        if ($status === 'cancelled' && $order['status'] !== 'cancelled') {
+            $items = Database::fetchAll("SELECT product_id, quantity FROM order_items WHERE order_id = :oid", ['oid' => $id]);
+            foreach ($items as $item) {
+                Database::query(
+                    "UPDATE products SET stock_quantity = stock_quantity + :qty WHERE id = :pid",
+                    ['qty' => $item['quantity'], 'pid' => $item['product_id']]
+                );
+            }
         }
 
         Order::updateWhere(

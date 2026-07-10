@@ -39,6 +39,13 @@ class PageController extends Controller
             'message' => $_POST['message'],
         ]);
 
+        $storeEmail = \App\Models\Setting::get('store_email', 'hello@rosaline.com');
+        $body = '<p><strong>Name:</strong> ' . e($_POST['name']) . '</p>';
+        $body .= '<p><strong>Email:</strong> ' . e($_POST['email']) . '</p>';
+        $body .= '<p><strong>Subject:</strong> ' . e($_POST['subject']) . '</p>';
+        $body .= '<p><strong>Message:</strong><br>' . nl2br(e($_POST['message'])) . '</p>';
+        send_mail($storeEmail, 'Contact Form: ' . $_POST['subject'], $body, $_POST['email']);
+
         $this->withSuccess('Message sent successfully! We will get back to you soon.');
         $this->redirectBack();
     }

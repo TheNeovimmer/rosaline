@@ -7,7 +7,7 @@ class ActivityLog
 {
     public static function log(int $userId, string $action, string $entityType, ?int $entityId = null, string $details = ''): void
     {
-        Database::execute(
+        Database::query(
             "INSERT INTO activity_logs (user_id, action, entity_type, entity_id, details) VALUES (:user_id, :action, :entity_type, :entity_id, :details)",
             [
                 'user_id' => $userId,

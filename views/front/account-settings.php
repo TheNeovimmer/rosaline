@@ -32,6 +32,7 @@
                     <?php if (!empty($errors)): ?><div class="alert alert-danger py-2"><?= implode('<br>', array_map('e', $errors)) ?></div><?php endif; ?>
                     <?php $success = \App\Core\Session::getFlash('success'); if ($success): ?><div class="alert alert-success py-2"><?= e($success) ?></div><?php endif; ?>
                     <form method="post" action="<?= url('account/settings') ?>">
+                        <?= csrf_field() ?>
                         <div class="box-dashboard_item">
                             <div class="dash_title"><h6 class="font-instrument_serif">Profile Information</h6></div>
                             <div class="dash_content">

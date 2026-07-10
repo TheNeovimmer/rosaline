@@ -24,6 +24,7 @@
         <div class="content_inner">
             <h3 class="title font-instrument_serif">Create an Account</h3>
             <form action="<?= url('register') ?>" method="POST" class="form-log">
+                <?= csrf_field() ?>
                 <div class="form-content">
                     <fieldset class="tf-field">
                         <label class="text-body-xs" for="registerFirstname">First name*</label>

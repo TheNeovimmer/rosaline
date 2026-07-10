@@ -27,6 +27,7 @@
             <?php endif; ?>
             <h3 class="title font-instrument_serif">Forgot Password?</h3>
             <form action="<?= url('forgot-password') ?>" method="POST" class="form-log">
+                <?= csrf_field() ?>
                 <div class="form-content">
                     <fieldset class="tf-field">
                         <label class="text-body-xs" for="forgotPass">Your email*</label>

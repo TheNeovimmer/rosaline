@@ -13,7 +13,7 @@ class Setting
 
     public static function set(string $key, mixed $value): void
     {
-        Database::execute(
+        Database::query(
             "INSERT INTO settings (`key`, `value`) VALUES (:key, :value) ON DUPLICATE KEY UPDATE `value` = :value2",
             ['key' => $key, 'value' => $value, 'value2' => $value]
         );

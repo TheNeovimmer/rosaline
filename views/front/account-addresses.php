@@ -49,11 +49,11 @@
                                     <p class="text-body-s cl-text-5 mb-2"><?= e($addr['address_line1']) ?><?= $addr['address_line2'] ? ', ' . e($addr['address_line2']) : '' ?><br><?= e($addr['city']) ?>, <?= e($addr['state']) ?> <?= e($addr['zip']) ?></p>
                                     <div class="d-flex gap-2">
                                         <?php if (!$addr['is_default']): ?>
-                                        <form method="post" action="<?= url('account/addresses/' . $addr['id'] . '/default') ?>">
+                                        <form method="post" action="<?= url('account/addresses/' . $addr['id'] . '/default') ?>"><?= csrf_field() ?>
                                             <button type="submit" class="tf-btn-link type-2 gap-4"><span class="text-body-s">Set Default</span></button>
                                         </form>
                                         <?php endif; ?>
-                                        <form method="post" action="<?= url('account/addresses/' . $addr['id'] . '/delete') ?>" onsubmit="return confirm('Delete this address?')">
+                                        <form method="post" action="<?= url('account/addresses/' . $addr['id'] . '/delete') ?>" onsubmit="return confirm('Delete this address?')"><?= csrf_field() ?>
                                             <button type="submit" class="tf-btn-link type-2 gap-4"><span class="text-body-s text-danger">Delete</span></button>
                                         </form>
                                     </div>
@@ -74,6 +74,7 @@
         <div class="modal-content">
             <div class="modal-header"><h5 class="modal-title font-instrument_serif">Add Address</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
             <form method="post" action="<?= url('account/addresses/create') ?>">
+                <?= csrf_field() ?>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6 mb-3"><label class="form-label">Label</label><select name="label" class="form-select"><option>Home</option><option>Work</option><option>Other</option></select></div>

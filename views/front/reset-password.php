@@ -1,5 +1,4 @@
-<?php $pageTitle = 'Login'; ?>
-<!-- Log -->
+<?php $pageTitle = 'Reset Password'; ?>
 <div class="section-log tf-grid-layout gap-0 md-col-2">
     <div class="image-left">
         <img loading="lazy" width="960" height="952" src="<?= asset('images/section/log.jpg') ?>" alt="Image">
@@ -22,36 +21,34 @@
     </div>
     <div class="content-right">
         <div class="content_inner">
-            <?php if (success()): ?>
-            <div class="alert alert-success text-body-s mb-16"><?= e(success()) ?></div>
-            <?php endif; ?>
-            <h3 class="title font-instrument_serif">Login</h3>
-            <form action="<?= url('login') ?>" method="POST" class="form-log">
+            <h3 class="title font-instrument_serif">Reset Password</h3>
+            <form action="<?= url('reset-password') ?>" method="POST" class="form-log">
                 <?= csrf_field() ?>
                 <div class="form-content">
-                    <?php if (hasErrors() && !error('email') && !error('password')): ?>
+                    <?php if (hasErrors() && !error('password') && !error('password_confirmation')): ?>
                     <p class="text-body-xs text-danger mb-8"><?= e(error('_general')) ?></p>
                     <?php endif; ?>
+                    <input type="hidden" name="token" value="<?= e($token ?? '') ?>">
+                    <input type="hidden" name="email" value="<?= e($email ?? '') ?>">
                     <fieldset class="tf-field">
-                        <label class="text-body-xs" for="logName">Your email*</label>
-                        <input class="style-3" type="email" name="email" id="logName" placeholder="Enter your email" value="<?= e(old('email')) ?>" required>
-                        <?php if (error('email')): ?><p class="text-body-xs text-danger mt-4"><?= e(error('email')) ?></p><?php endif; ?>
-                    </fieldset>
-                    <fieldset class="tf-field">
-                        <label class="text-body-xs" for="logPass">Password*</label>
+                        <label class="text-body-xs" for="resetPass">New Password*</label>
                         <div class="password-wrapper w-100">
-                            <input class="password-field style-3" type="password" name="password" id="logPass" placeholder="Enter your password" required>
+                            <input class="password-field style-3" type="password" name="password" id="resetPass" placeholder="Enter new password" required>
                             <span class="toggle-pass icon-EyeOpen cl-text-5"></span>
                         </div>
                         <?php if (error('password')): ?><p class="text-body-xs text-danger mt-4"><?= e(error('password')) ?></p><?php endif; ?>
-                        <a href="<?= url('forgot-password') ?>" class="text-body-xs text-decoration-underline link" tabindex="-1">Forgot your password?</a>
+                    </fieldset>
+                    <fieldset class="tf-field">
+                        <label class="text-body-xs" for="resetPassConfirm">Confirm Password*</label>
+                        <div class="password-wrapper w-100">
+                            <input class="password-field style-3" type="password" name="password_confirmation" id="resetPassConfirm" placeholder="Confirm new password" required>
+                            <span class="toggle-pass icon-EyeOpen cl-text-5"></span>
+                        </div>
+                        <?php if (error('password_confirmation')): ?><p class="text-body-xs text-danger mt-4"><?= e(error('password_confirmation')) ?></p><?php endif; ?>
                     </fieldset>
                 </div>
                 <div class="form-btn">
-                    <button type="submit" class="tf-btn type-2 style-2 w-100">Sign In</button>
-                    <a href="<?= url('register') ?>" class="tf-btn-line">
-                        <span class="fw-normal text-uppercase">Create an account</span>
-                    </a>
+                    <button type="submit" class="tf-btn type-2 style-2 w-100">Reset Password</button>
                 </div>
             </form>
         </div>

@@ -126,6 +126,7 @@
                             <div class="tf-product-total-quantity">
                                 <div class="group-action">
                                     <form method="POST" action="<?= url('cart/add') ?>" class="d-flex gap-10 w-100">
+                                        <?= csrf_field() ?>
                                         <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                                         <div class="wg-quantity">
                                             <button type="button" class="btn-quantity btn-decrease">
@@ -148,6 +149,7 @@
                         </div>
                         <div class="tf-product-extra-link">
                             <form method="POST" action="<?= url('wishlist/add') ?>" style="display:inline">
+                                <?= csrf_field() ?>
                                 <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                                 <button type="submit" class="btn-add-wishlist product-extra-icon text-body-s link" style="border:none;background:none">
                                     <i class="icon icon-Hearth"></i>
@@ -269,6 +271,7 @@
                                     <li><a href="#modalQuickView" data-bs-toggle="modal" class="hover-tooltip tooltip-left box-icon"><span class="icon icon-EyeOpen"></span><span class="tooltip">Quick view</span></a></li>
                                     <li class="wishlist">
                                         <form method="POST" action="<?= url('wishlist/add') ?>" style="display:inline">
+                                            <?= csrf_field() ?>
                                             <input type="hidden" name="product_id" value="<?= $rp['id'] ?>">
                                             <button type="submit" class="hover-tooltip tooltip-left box-icon" style="border:none;background:none">
                                                 <span class="icon icon-Hearth"></span><span class="tooltip">Add to Wishlist</span>
@@ -278,6 +281,7 @@
                                 </ul>
                                 <div class="product-action_bot">
                                     <form method="POST" action="<?= url('cart/add') ?>">
+                                        <?= csrf_field() ?>
                                         <input type="hidden" name="product_id" value="<?= $rp['id'] ?>">
                                         <input type="hidden" name="quantity" value="1">
                                         <button type="submit" class="tf-btn hv-black btn-white type-2 w-100">

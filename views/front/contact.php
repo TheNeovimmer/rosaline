@@ -21,6 +21,7 @@
             <div class="alert alert-success text-body-s mb-16"><?= e(success()) ?></div>
             <?php endif; ?>
             <form action="<?= url('contact') ?>" method="POST">
+                <?= csrf_field() ?>
                 <div class="form-content mb-24">
                     <fieldset class="tf-field">
                         <label for="messName" class="text-body-xs">Your name*</label>

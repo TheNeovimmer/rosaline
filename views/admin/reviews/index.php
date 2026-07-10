@@ -25,16 +25,16 @@
                     <td><?= formatDate($r['created_at']) ?></td>
                     <td>
                         <?php if ($r['status'] !== 'approved'): ?>
-                        <form method="post" action="<?= url('admin/reviews/' . $r['id'] . '/approve') ?>" style="display:inline">
+                        <form method="post" action="<?= url('admin/reviews/' . $r['id'] . '/approve') ?>" style="display:inline"><?= csrf_field() ?>
                             <button class="btn btn-outline-success btn-sm">Approve</button>
                         </form>
                         <?php endif; ?>
                         <?php if ($r['status'] !== 'rejected'): ?>
-                        <form method="post" action="<?= url('admin/reviews/' . $r['id'] . '/reject') ?>" style="display:inline">
+                        <form method="post" action="<?= url('admin/reviews/' . $r['id'] . '/reject') ?>" style="display:inline"><?= csrf_field() ?>
                             <button class="btn btn-outline-warning btn-sm">Reject</button>
                         </form>
                         <?php endif; ?>
-                        <form method="post" action="<?= url('admin/reviews/' . $r['id'] . '/delete') ?>" style="display:inline" onsubmit="return confirm('Delete this review?')">
+                        <form method="post" action="<?= url('admin/reviews/' . $r['id'] . '/delete') ?>" style="display:inline" onsubmit="return confirm('Delete this review?')"><?= csrf_field() ?>
                             <button class="btn btn-outline-danger btn-sm">Delete</button>
                         </form>
                     </td>

@@ -144,6 +144,7 @@
                                             <li><a href="#modalQuickView" data-bs-toggle="modal" class="hover-tooltip tooltip-left box-icon"><span class="icon icon-EyeOpen"></span><span class="tooltip">Quick view</span></a></li>
                                             <li class="wishlist">
                                                 <form method="POST" action="<?= url('wishlist/add') ?>" style="display:inline">
+                                                    <?= csrf_field() ?>
                                                     <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                                                     <button type="submit" class="hover-tooltip tooltip-left box-icon" style="border:none;background:none">
                                                         <span class="icon icon-Hearth"></span><span class="tooltip">Add to Wishlist</span>
@@ -153,6 +154,7 @@
                                         </ul>
                                         <div class="product-action_bot">
                                             <form method="POST" action="<?= url('cart/add') ?>">
+                                                <?= csrf_field() ?>
                                                 <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
                                                 <input type="hidden" name="quantity" value="1">
                                                 <button type="submit" class="btn-action_add tf-btn hv-black btn-white type-2 w-100">

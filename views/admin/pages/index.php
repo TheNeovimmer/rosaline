@@ -19,7 +19,7 @@
                     <td style="white-space:nowrap;"><?= formatDate($p['updated_at'] ?? $p['created_at'], 'M d, Y') ?></td>
                     <td>
                         <a href="<?= url('admin/pages/' . $p['id'] . '/edit') ?>" class="btn btn-outline-dark btn-sm">Edit</a>
-                        <form method="post" action="<?= url('admin/pages/' . $p['id'] . '/delete') ?>" style="display:inline" onsubmit="return confirm('Delete this page?')">
+                        <form method="post" action="<?= url('admin/pages/' . $p['id'] . '/delete') ?>" style="display:inline" onsubmit="return confirm('Delete this page?')"><?= csrf_field() ?>
                             <button class="btn btn-outline-danger btn-sm">Delete</button>
                         </form>
                     </td>

@@ -4,6 +4,7 @@
     <div class="card-body">
         <?php $errors = $data['errors'] ?? []; if (!empty($errors)): ?><div class="alert alert-danger py-2"><?= implode('<br>', array_map('e', $errors)) ?></div><?php endif; ?>
         <form method="post" action="<?= $action ?>">
+            <?= csrf_field() ?>
             <div class="row">
                 <div class="col-md-6 mb-3"><label class="form-label">Title</label><input type="text" name="title" class="form-control" value="<?= e($page['title'] ?? '') ?>"></div>
                 <div class="col-md-6 mb-3"><label class="form-label">Slug</label><input type="text" name="slug" class="form-control" value="<?= e($page['slug'] ?? '') ?>"></div>
