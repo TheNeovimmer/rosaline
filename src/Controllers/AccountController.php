@@ -42,8 +42,17 @@ class AccountController extends Controller
             return;
         }
 
+        $govName = '';
+        if (!empty($order['governorate_id'])) {
+            $g = Database::fetch("SELECT name_en FROM governorates WHERE id = ?", [$order['governorate_id']]);
+            $govName = $g ? $g['name_en'] : '';
+        }
+        $order['gov_name'] = $govName;
+
+        $history = Order::getStatusHistory($id);
         $this->view('front/account-order-detail', [
             'order' => $order,
+            'history' => $history,
         ]);
     }
 
@@ -228,6 +237,55 @@ class AccountController extends Controller
         Database::query("UPDATE addresses SET is_default = 0 WHERE user_id = :uid", ['uid' => Auth::id()]);
         Database::query("UPDATE addresses SET is_default = 1 WHERE id = :id AND user_id = :uid", ['id' => $id, 'uid' => Auth::id()]);
         $this->redirectBack();
+    }
+
+    public function cancelOrder(int $id): void
+    {
+        $order = Database::fetch("SELECT * FROM orders WHERE id = :id AND user_id = :uid", ['id' => $id, 'uid' => Auth::id()]);
+        if (!$order || !Order::canTransition($order['status'], 'cancelled')) {
+            $this->withError('Order cannot be cancelled.');
+            $this->redirectBack();
+            return;
+        }
+
+        Order::updateStatus($id, 'cancelled', $_POST['reason'] ?? 'Cancelled by customer');
+        $this->withSuccess('Order cancelled.');
+        $this->redirect('/account/orders/' . $id);
+    }
+
+    public function requestReturn(int $id): void
+    {
+        $order = Database::fetch("SELECT * FROM orders WHERE id = :id AND user_id = :uid", ['id' => $id, 'uid' => Auth::id()]);
+        if (!$order || $order['status'] !== 'delivered') {
+            $this->withError('Return can only be requested for delivered orders.');
+            $this->redirectBack();
+            return;
+        }
+
+        Order::updateStatus($id, 'return_requested', $_POST['reason'] ?? 'Return requested by customer');
+        $this->withSuccess('Return request submitted.');
+        $this->redirect('/account/orders/' . $id);
+    }
+
+    public function invoice(int $id): void
+    {
+        $order = Order::getWithItems($id);
+        if (!$order || (int) $order['user_id'] !== Auth::id()) {
+            $this->redirect('/account/orders');
+            return;
+        }
+
+        // Fetch governorate name
+        $govName = '';
+        if (!empty($order['governorate_id'])) {
+            $g = Database::fetch("SELECT name_en FROM governorates WHERE id = ?", [$order['governorate_id']]);
+            $govName = $g ? $g['name_en'] : '';
+        }
+
+        \App\Core\View::renderPartial('front/invoice', [
+            'order' => $order,
+            'gov_name' => $govName,
+        ]);
     }
 
     public function payment(): void

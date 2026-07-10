@@ -1,5 +1,4 @@
-<?php $pageTitle = 'Order Detail'; ?>
-<!-- Page Title -->
+<?php $pageTitle = 'Order Detail'; $history = $data['history'] ?? []; ?>
 <section class="tf-page-heading_account flat-spacing">
     <div class="container">
         <a href="<?= url('account/orders') ?>" class="content d-inline-flex">
@@ -13,7 +12,6 @@
         </a>
     </div>
 </section>
-<!-- Account -->
 <div class="account-order-detail flat-spacing-2">
     <div class="container">
         <div class="row gy-24">
@@ -23,27 +21,28 @@
                         <div class="order-heading">
                             <div>
                                 <h6 class="font-instrument_serif mb-8">Tracking Timeline</h6>
-                                <p class="text-body-s cl-text-5">Tracking Number: <?= e($order['tracking_number'] ?? 'Not available') ?></p>
                             </div>
-                            <p class="order__tag <?= strtolower($order['status']) ?> text-body-s"><?= e($order['status']) ?></p>
+                            <p class="order__tag <?= strtolower($order['status']) ?> text-body-s"><?= e(ucfirst(str_replace('_', ' ', $order['status']))) ?></p>
                         </div>
                         <div class="order-content">
+                            <?php if (empty($history)): ?>
+                            <p class="text-body-s cl-text-5">No status updates yet.</p>
+                            <?php else: ?>
                             <div class="timeline-wrap">
-                                <?php $steps = [['Order Placed', 'Your order has been placed successfully', 'Box'], ['Processing', 'Your order is being prepared for shipment', 'Timer'], ['Shipped', 'Your order has been shipped', 'Truck'], ['In Transit', 'Package is on the way to your location', 'DotLocation'], ['Out for Delivery', 'Package will be delivered today', 'Truck'], ['Delivered', 'Package delivered to recipient', 'CircleCheck']]; ?>
-                                <?php $stepIndex = match(strtolower($order['status'])) { 'pending' => 0, 'processing' => 1, 'shipped' => 2, 'in_transit' => 3, 'out_for_delivery' => 4, 'delivered' => 5, default => 0 }; ?>
-                                <?php foreach ($steps as $i => $step): ?>
-                                <div class="timeline-item <?= $i <= $stepIndex ? 'step-done' : '' ?>">
-                                    <?php if ($i < count($steps) - 1): ?><span class="step-line"></span><?php endif; ?>
-                                    <span class="ic-wrap"><i class="icon icon-<?= $step[2] ?>"></i></span>
+                                <?php foreach ($history as $i => $entry): ?>
+                                <div class="timeline-item step-done">
+                                    <?php if ($i < count($history) - 1): ?><span class="step-line"></span><?php endif; ?>
+                                    <span class="ic-wrap"><i class="icon icon-CircleCheck"></i></span>
                                     <div class="tl-content">
                                         <div class="info_left">
-                                            <p class="tl_title fw-normal mb-6"><?= $step[0] ?></p>
-                                            <p class="tl_desc text-body-s cl-text-5"><?= $step[1] ?></p>
+                                            <p class="tl_title fw-normal mb-6"><?= e(ucfirst(str_replace('_', ' ', $entry['status']))) ?></p>
+                                            <p class="tl_desc text-body-s cl-text-5"><?= e($entry['notes'] ?? '') ?> — <?= formatDate($entry['created_at']) ?></p>
                                         </div>
                                     </div>
                                 </div>
                                 <?php endforeach; ?>
                             </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <div class="account-order_item type-2">
@@ -61,7 +60,7 @@
                                             <a href="<?= url('product/' . $item['slug']) ?>" class="info__name fw-normal link-underline mb-6"><?= e($item['name']) ?></a>
                                             <p class="info__qty text-body-s cl-text-5">Qty: <?= $item['quantity'] ?></p>
                                         </div>
-                                        <p class="info__price fw-normal"><?= formatPrice($item['price'] * $item['quantity']) ?></p>
+                                        <p class="info__price fw-normal"><?= formatPrice(($item['product_price'] ?? $item['price']) * $item['quantity']) ?></p>
                                     </div>
                                 </li>
                                 <?php endforeach; ?>
@@ -72,13 +71,6 @@
             </div>
             <div class="col-lg-4">
                 <div class="col-right">
-                    <div class="box-est">
-                        <div class="ic-wrap"><i class="icon icon-Clock"></i></div>
-                        <div class="est-info">
-                            <p class="text-body-s cl-text-5 mb-6">Estimated Delivery</p>
-                            <p class="fw-normal"><?= formatDate($order['estimated_delivery'] ?? 'Pending') ?></p>
-                        </div>
-                    </div>
                     <div class="box-summary">
                         <h6 class="title font-instrument_serif">Order Summary</h6>
                         <ul class="tf-list vertical gap-16">
@@ -86,10 +78,12 @@
                                 <span class="cl-text-5">Subtotal</span>
                                 <span><?= formatPrice($order['subtotal'] ?? $order['total']) ?></span>
                             </li>
+                            <?php if (($order['shipping_fee'] ?? 0) > 0): ?>
                             <li class="text-body-s">
                                 <span class="cl-text-5">Shipping</span>
-                                <span><?= formatPrice($order['shipping'] ?? 0) ?></span>
+                                <span><?= formatPrice($order['shipping_fee']) ?></span>
                             </li>
+                            <?php endif; ?>
                             <li class="br-line bg-line-5"></li>
                             <li class="fw-normal">
                                 <span>Total</span>
@@ -98,7 +92,7 @@
                             <li class="br-line bg-line-5"></li>
                             <li class="text-body-s">
                                 <span class="cl-text-5">Payment</span>
-                                <span><?= e($order['payment_method'] ?? 'N/A') ?></span>
+                                <span>Cash on Delivery</span>
                             </li>
                         </ul>
                     </div>
@@ -107,18 +101,30 @@
                         <div>
                             <p class="fw-normal mb-8"><?= e($order['shipping_name'] ?? '') ?></p>
                             <p class="text-body-s cl-text-5">
-                                <?= e($order['shipping_phone'] ?? '') ?><br>
-                                <?= e($order['shipping_address'] ?? '') ?><br>
-                                <?= e($order['shipping_city'] ?? '') ?>, <?= e($order['shipping_state'] ?? '') ?> <?= e($order['shipping_zip'] ?? '') ?><br>
-                                <?= e($order['shipping_country'] ?? '') ?>
+                                <?php if ($order['phone'] ?? $order['delivery_notes'] ?? $order['shipping_phone'] ?? false): ?>
+                                <strong>Phone:</strong> <?= e($order['phone'] ?? $order['delivery_notes'] ?? $order['shipping_phone'] ?? '') ?><br>
+                                <?php endif; ?>
+                                <?= nl2br(e($order['shipping_address'] ?? '')) ?><br>
+                                <?php if (!empty($order['gov_name'])): ?>
+                                <strong>Governorate:</strong> <?= e($order['gov_name']) ?>
+                                <?php endif; ?>
                             </p>
                         </div>
                     </div>
                     <div class="box-btn tf-list vertical gap-20">
-                        <a href="<?= url('contact') ?>" class="tf-btn type-2 style-2 w-100">Contact support</a>
-                        <a href="#" class="tf-btn-line">
-                            <span class="fw-normal text-uppercase">Request return</span>
+                        <?php if (in_array($order['status'], ['pending','confirmed'])): ?>
+                        <form method="post" action="<?= url('account/orders/' . $order['id'] . '/cancel') ?>" onsubmit="return confirm('Cancel this order?')">
+                            <button type="submit" class="tf-btn type-2 style-2 w-100" style="background:#dc3545;border-color:#dc3545;">Cancel Order</button>
+                        </form>
+                        <?php elseif ($order['status'] === 'delivered'): ?>
+                        <form method="post" action="<?= url('account/orders/' . $order['id'] . '/return') ?>" onsubmit="return confirm('Request a return?')">
+                            <button type="submit" class="tf-btn type-2 style-2 w-100">Request Return</button>
+                        </form>
+                        <?php endif; ?>
+                        <a href="<?= url('account/orders/' . $order['id'] . '/invoice') ?>" class="tf-btn-line" target="_blank">
+                            <span class="fw-normal text-uppercase">View Invoice</span>
                         </a>
+                        <a href="<?= url('contact') ?>" class="tf-btn type-2 style-2 w-100">Contact Support</a>
                     </div>
                 </div>
             </div>

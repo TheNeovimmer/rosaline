@@ -42,6 +42,9 @@ $router->group(['App\Middleware\AuthMiddleware'], function (Router $router) {
     $router->post('/account/addresses/{id}/delete', ['App\Controllers\AccountController', 'deleteAddress']);
     $router->post('/account/addresses/{id}/default', ['App\Controllers\AccountController', 'setDefaultAddress']);
     $router->get('/account/payment', ['App\Controllers\AccountController', 'payment']);
+    $router->post('/account/orders/{id}/cancel', ['App\Controllers\AccountController', 'cancelOrder']);
+    $router->post('/account/orders/{id}/return', ['App\Controllers\AccountController', 'requestReturn']);
+    $router->get('/account/orders/{id}/invoice', ['App\Controllers\AccountController', 'invoice']);
 
     $router->get('/wishlist', ['App\Controllers\AccountController', 'wishlist']);
     $router->post('/wishlist/add', ['App\Controllers\AccountController', 'addToWishlist']);
