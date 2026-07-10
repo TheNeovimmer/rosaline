@@ -38,34 +38,33 @@ class OrderController extends Controller
             $params
         )['cnt'];
 
-        $lastPage = max(1, (int) ceil($total / 15));
+        $perPage = 15;
+        $lastPage = max(1, (int) ceil($total / $perPage));
         $page = max(1, min($page, $lastPage));
-        $offset = ($page - 1) * 15;
+        $offset = ($page - 1) * $perPage;
 
         $orders = Database::fetchAll(
-            "SELECT o.*, u.name as user_name, u.email as user_email
+            "SELECT o.*, u.name as user_name, u.email as user_email, g.name_en as governorate_name
              FROM orders o
              LEFT JOIN users u ON u.id = o.user_id
+             LEFT JOIN governorates g ON g.id = o.governorate_id
              WHERE {$where}
              ORDER BY o.created_at DESC
-             LIMIT 15 OFFSET {$offset}",
+             LIMIT {$perPage} OFFSET {$offset}",
             $params
         );
 
-        $this->view('admin/orders/index', [
-            'orders'       => $orders,
-            'pagination'   => [
-                'items'        => $orders,
+        $this->adminView('admin/orders/index', [
+            'orders'        => $orders,
+            'status'        => $status,
+            'governorate_id'=> $govId,
+            'governorates'  => Governorate::getActive(),
+            'pagination'    => [
                 'current_page' => $page,
-                'per_page'     => 15,
-                'total'        => $total,
                 'last_page'    => $lastPage,
-                'has_more'     => $page < $lastPage,
+                'total'        => $total,
             ],
-            'status'       => $status,
-            'governorate_id' => $govId,
-            'governorates' => Governorate::getActive(),
-        ], 'admin');
+        ]);
     }
 
     public function show(int $id): void
@@ -75,28 +74,36 @@ class OrderController extends Controller
             return;
         }
 
-        $order = Order::getWithItems($id);
+        $order = Database::fetch(
+            "SELECT o.*, u.name as user_name, u.email as user_email FROM orders o LEFT JOIN users u ON u.id = o.user_id WHERE o.id = ?",
+            [$id]
+        );
+
         if (!$order) {
             $this->redirect('/admin/orders');
             return;
         }
 
-        $history = Order::getStatusHistory($id);
-        $governorates = Governorate::getActive();
+        $items = Database::fetchAll(
+            "SELECT oi.*, p.name, p.slug, p.image FROM order_items oi LEFT JOIN products p ON p.id = oi.product_id WHERE oi.order_id = ?",
+            [$id]
+        );
 
-        // Resolve governorate name
-        $govName = null;
+        $order['items'] = $items;
+
+        $govName = '';
         if (!empty($order['governorate_id'])) {
             $g = Database::fetch("SELECT name_en FROM governorates WHERE id = ?", [$order['governorate_id']]);
-            $govName = $g ? $g['name_en'] : null;
+            $govName = $g ? $g['name_en'] : '';
         }
 
-        $this->view('admin/orders/detail', [
-            'order'        => $order,
-            'history'      => $history,
-            'governorates' => $governorates,
-            'govName'      => $govName,
-        ], 'admin');
+        $history = Order::getStatusHistory($id);
+
+        $this->adminView('admin/orders/detail', [
+            'order'   => $order,
+            'gov_name'=> $govName,
+            'history' => $history,
+        ]);
     }
 
     public function updateStatus(int $id): void
@@ -106,23 +113,26 @@ class OrderController extends Controller
             return;
         }
 
+        $newStatus = trim($_POST['status'] ?? '');
+        $notes = trim($_POST['notes'] ?? '');
+
         $order = Order::find($id);
         if (!$order) {
-            $this->redirect('/admin/orders');
+            $this->withError('Order not found.');
+            $this->redirectBack();
             return;
         }
 
-        $newStatus = $_POST['status'] ?? '';
-        $note = $_POST['note'] ?? '';
-        $adminId = Auth::id();
-
-        if (Order::updateStatus($id, $newStatus, $note, $adminId)) {
-            $this->logActivity('update', 'order', $id, 'Order #' . ($order['order_number'] ?? $id) . ' status → ' . $newStatus);
-            $this->withSuccess('Order status updated to ' . ucfirst($newStatus) . '.');
-        } else {
-            $this->withErrors(['status' => ['Invalid status transition from ' . $order['status'] . ' to ' . $newStatus]]);
+        if (!Order::canTransition($order['status'], $newStatus)) {
+            $this->withError("Cannot transition from {$order['status']} to {$newStatus}.");
+            $this->redirectBack();
+            return;
         }
-        $this->redirectBack();
+
+        Order::updateStatus($id, $newStatus, $notes);
+
+        $this->withSuccess("Order status updated to {$newStatus}.");
+        $this->redirect('/admin/orders/' . $id);
     }
 
     public function adminInvoice(int $id): void
@@ -132,13 +142,30 @@ class OrderController extends Controller
             return;
         }
 
-        $stmt = Database::query("SELECT o.*, u.name as user_name, u.email as user_email FROM orders o LEFT JOIN users u ON o.user_id = u.id WHERE o.id = ?", [$id]);
-        $order = $stmt->fetch();
+        $order = Database::fetch(
+            "SELECT o.*, u.name as user_name, u.email as user_email FROM orders o LEFT JOIN users u ON o.user_id = u.id WHERE o.id = ?",
+            [$id]
+        );
+
         if (!$order) {
             $this->redirect('/admin/orders');
             return;
         }
-        $items = Database::query("SELECT * FROM order_items WHERE order_id = ?", [$id])->fetchAll();
+
+        $order['items'] = Database::fetchAll(
+            "SELECT oi.*, p.name, p.slug, p.image, p.price as product_price FROM order_items oi LEFT JOIN products p ON p.id = oi.product_id WHERE oi.order_id = ?",
+            [$id]
+        );
+
+        $govName = '';
+        if (!empty($order['governorate_id'])) {
+            $g = Database::fetch("SELECT name_en FROM governorates WHERE id = ?", [$order['governorate_id']]);
+            $govName = $g ? $g['name_en'] : '';
+        }
+
+        $app = require __DIR__ . '/../../../config/app.php';
+        $baseUrl = rtrim($app['url'], '/');
+
         require __DIR__ . '/../../../views/front/invoice.php';
     }
 }

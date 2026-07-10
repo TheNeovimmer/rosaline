@@ -82,6 +82,7 @@ $router->group(['App\Middleware\AdminMiddleware'], function (Router $router) {
     $router->get('/admin/orders', ['App\Controllers\Admin\OrderController', 'index']);
     $router->get('/admin/orders/{id}', ['App\Controllers\Admin\OrderController', 'show']);
     $router->post('/admin/orders/{id}/status', ['App\Controllers\Admin\OrderController', 'updateStatus']);
+    $router->get('/admin/orders/{id}/invoice', ['App\Controllers\Admin\OrderController', 'adminInvoice']);
 
     $router->get('/admin/return-requests', ['App\Controllers\Admin\ReturnRequestController', 'index']);
     $router->post('/admin/return-requests/{id}/approve', ['App\Controllers\Admin\ReturnRequestController', 'approve']);
