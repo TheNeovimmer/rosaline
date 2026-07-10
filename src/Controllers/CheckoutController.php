@@ -111,11 +111,15 @@ class CheckoutController extends Controller
         try {
             $orderNumber = 'ORD-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6));
 
+            $fullName = trim(($_POST['first_name'] ?? '') . ' ' . ($_POST['last_name'] ?? ''));
             $orderId = Order::create([
                 'user_id'          => Auth::id(),
                 'order_number'     => $orderNumber,
                 'total'            => $total,
+                'subtotal'         => $subtotal,
                 'status'           => 'pending',
+                'shipping_name'    => $fullName,
+                'shipping_phone'   => $_POST['phone'] ?? '',
                 'shipping_address' => $address,
                 'billing_address'  => $address,
                 'governorate_id'   => (int)$_POST['governorate_id'],

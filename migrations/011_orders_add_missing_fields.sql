@@ -1,0 +1,5 @@
+ALTER TABLE orders ADD COLUMN shipping_name VARCHAR(255) DEFAULT NULL AFTER billing_address;
+ALTER TABLE orders ADD COLUMN shipping_phone VARCHAR(20) DEFAULT NULL AFTER shipping_name;
+ALTER TABLE orders ADD COLUMN subtotal DECIMAL(10,3) NOT NULL DEFAULT 0.000 AFTER total;
+ALTER TABLE orders ADD COLUMN tracking_number VARCHAR(100) DEFAULT NULL AFTER notes;
+ALTER TABLE orders ADD COLUMN estimated_delivery DATE DEFAULT NULL AFTER tracking_number;
