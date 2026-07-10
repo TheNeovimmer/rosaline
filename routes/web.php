@@ -116,6 +116,13 @@ $router->group(['App\Middleware\AdminMiddleware'], function (Router $router) {
     $router->post('/admin/settings', ['App\Controllers\Admin\SettingController', 'update']);
 
     $router->get('/admin/activity', ['App\Controllers\Admin\ActivityController', 'index']);
+
+    $router->get('/admin/governorates', ['App\Controllers\Admin\GovernorateController', 'index']);
+    $router->get('/admin/governorates/create', ['App\Controllers\Admin\GovernorateController', 'create']);
+    $router->post('/admin/governorates/create', ['App\Controllers\Admin\GovernorateController', 'store']);
+    $router->get('/admin/governorates/{id}/edit', ['App\Controllers\Admin\GovernorateController', 'edit']);
+    $router->post('/admin/governorates/{id}/edit', ['App\Controllers\Admin\GovernorateController', 'update']);
+    $router->post('/admin/governorates/{id}/delete', ['App\Controllers\Admin\GovernorateController', 'destroy']);
 });
 
 });

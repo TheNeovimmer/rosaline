@@ -77,6 +77,7 @@
 
             <div class="sidebar-label collapse-label">System</div>
             <a href="<?= url('admin/settings') ?>" class="<?= str_contains($_SERVER['REQUEST_URI'], '/admin/settings') ? 'active' : '' ?>"><i class="icon icon-Setting"></i> <span>Settings</span></a>
+            <a href="<?= url('admin/governorates') ?>" class="<?= str_contains($_SERVER['REQUEST_URI'], '/admin/governorates') ? 'active' : '' ?>"><i class="icon icon-Map"></i> <span>Governorates</span></a>
         </div>
         <div class="sidebar-footer">
             <button class="sidebar-collapse-btn" id="sidebarCollapseBtn" title="Collapse sidebar"><i class="icon icon-OpenMenu"></i></button>
