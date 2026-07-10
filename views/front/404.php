@@ -47,7 +47,7 @@
                                 <span class="rate-number text-body-xs">5.0</span>
                             </div>
                             <a href="<?= url('product/clear-skin-tonic') ?>" class="name-product fw-normal link-underline">Clear Skin Tonic</a>
-                            <div class="price-wrap"><span class="price-new fw-normal">$22.00</span></div>
+                            <div class="price-wrap"><span class="price-new fw-normal"><?= formatPrice(22) ?></span></div>
                         </div>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
                                 <span class="rate-number text-body-xs">3.5</span>
                             </div>
                             <a href="<?= url('product/botanical-radiance-serum') ?>" class="name-product fw-normal link-underline">Botanical Radiance Serum</a>
-                            <div class="price-wrap"><span class="price-new fw-normal">$14.00</span></div>
+                            <div class="price-wrap"><span class="price-new fw-normal"><?= formatPrice(14) ?></span></div>
                         </div>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                                 <span class="rate-number text-body-xs">4.0</span>
                             </div>
                             <a href="<?= url('product/base-face-milk-essence') ?>" class="name-product fw-normal link-underline">The Base Face Milk Essence</a>
-                            <div class="price-wrap"><span class="price-new fw-normal">$42.00</span></div>
+                            <div class="price-wrap"><span class="price-new fw-normal"><?= formatPrice(42) ?></span></div>
                         </div>
                     </div>
                 </div>
@@ -131,7 +131,7 @@
                                 <span class="rate-number text-body-xs">5.0</span>
                             </div>
                             <a href="<?= url('product/multivitamin-body-serum') ?>" class="name-product fw-normal link-underline">Multivitamin Body Serum</a>
-                            <div class="price-wrap"><span class="price-new fw-normal">$34.00</span></div>
+                            <div class="price-wrap"><span class="price-new fw-normal"><?= formatPrice(34) ?></span></div>
                         </div>
                     </div>
                 </div>

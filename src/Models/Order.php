@@ -98,7 +98,7 @@ class Order extends Model
         }
 
         $order['items'] = Database::fetchAll(
-            "SELECT oi.*, p.name, p.slug, p.image, p.price
+            "SELECT oi.*, p.name, p.slug, p.image
              FROM order_items oi
              LEFT JOIN products p ON p.id = oi.product_id
              WHERE oi.order_id = :order_id",

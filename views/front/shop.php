@@ -144,7 +144,7 @@
                                 </form>
                             </li>
                             <li>
-                                <a href="#modalQuickView" data-bs-toggle="modal" class="hover-tooltip box-icon">
+                                <a href="#modalQuickView" data-bs-toggle="modal" data-product-id="<?= $product['id'] ?>" class="hover-tooltip box-icon quick-view-btn">
                                     <span class="icon icon-EyeOpen"></span>
                                     <span class="tooltip">Quick view</span>
                                 </a>
@@ -208,7 +208,7 @@
                         </ul>
                         <?php endif; ?>
                         <ul class="product-action_list">
-                            <li><a href="#modalQuickView" data-bs-toggle="modal" class="hover-tooltip tooltip-left box-icon"><span class="icon icon-EyeOpen"></span><span class="tooltip">Quick view</span></a></li>
+                            <li><a href="#modalQuickView" data-bs-toggle="modal" data-product-id="<?= $product['id'] ?>" class="hover-tooltip tooltip-left box-icon quick-view-btn"><span class="icon icon-EyeOpen"></span><span class="tooltip">Quick view</span></a></li>
                             <li class="wishlist">
                                 <form method="POST" action="<?= url('wishlist/add') ?>" style="display:inline">
                                     <?= csrf_field() ?>

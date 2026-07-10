@@ -75,7 +75,7 @@
                                 </div>
                                 <div id="faqAccordion-2" class="collapse" data-bs-parent="#faqAccordion">
                                     <div class="accordion-content">
-                                        <p class="cl-text-5">Yes, we offer free standard shipping on all orders over $50 within Vietnam. For international orders, free shipping is available on orders over $100 USD.</p>
+                                        <p class="cl-text-5">Yes, we offer free standard shipping on all orders over <?= formatPrice(200) ?> within Tunisia. For international orders, free shipping is available on orders over <?= formatPrice(500) ?>.</p>
                                     </div>
                                 </div>
                             </div>

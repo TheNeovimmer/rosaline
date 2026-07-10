@@ -77,13 +77,18 @@ function formatPrice(float $price): string
 
 function isTunisianPhone(string $phone): bool
 {
-    return (bool)preg_match('/^\+216[2-9]\d{7}$/', $phone);
+    $cleaned = preg_replace('/[\s\-\.\(\)]/', '', $phone);
+    $cleaned = preg_replace('/^00216/', '+216', $cleaned);
+    $cleaned = preg_replace('/^0(\d{8})$/', '+216$1', $cleaned);
+    if (!str_starts_with($cleaned, '+216')) {
+        $cleaned = '+216' . ltrim($cleaned, '+');
+    }
+    return (bool)preg_match('/^\+216[2-9]\d{7}$/', $cleaned);
 }
 
 function governorateDropdown(int $selectedId = 0): string
 {
-    $db = App\Core\Database::getInstance();
-    $rows = $db->query("SELECT id, name_en FROM governorates WHERE is_active = 1 ORDER BY name_en")->fetchAll();
+    $rows = App\Core\Database::fetchAll("SELECT id, name_en FROM governorates WHERE is_active = 1 ORDER BY name_en");
     $html = '<select name="governorate_id" class="style-4" required>';
     $html .= '<option value="">Select governorate</option>';
     foreach ($rows as $row) {

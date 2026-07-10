@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Review;
 
 class ShopController extends Controller
 {
@@ -58,6 +59,25 @@ class ShopController extends Controller
             'sort'       => $sort,
             'min_price'  => $minPrice,
             'max_price'  => $maxPrice,
+        ]);
+    }
+
+    public function quickView(int $id): void
+    {
+        $product = Product::find($id);
+        if (!$product || $product['status'] !== 'active') {
+            $this->json(['error' => 'Product not found'], 404);
+            return;
+        }
+        $images = !empty($product['images']) ? json_decode($product['images'], true) : [$product['image']];
+        $avgRating = Review::getAverageRating($id);
+        $this->json([
+            'success'  => true,
+            'product'  => $product,
+            'images'   => $images,
+            'rating'   => $avgRating,
+            'price'    => formatPrice($product['price']),
+            'imageUrl' => url($product['image']),
         ]);
     }
 

@@ -33,7 +33,7 @@
                         </div>
                         <?php else: ?>
                         <?php foreach ($items as $item): ?>
-                        <div class="tf-cart_item each-prd file-delete">
+                        <div class="tf-cart_item each-prd file-delete" data-product-id="<?= $item['product_id'] ?>" data-price="<?= $item['price'] ?>">
                             <div class="cart-col cart_product">
                                 <a href="<?= url('product/' . $item['slug']) ?>" class="img-prd">
                                     <img loading="lazy" width="128" height="154"
@@ -72,8 +72,9 @@
                 <div class="fl-sidebar-cart">
                     <div class="notification-progress">
                         <p class="fw-normal mb-8">
-                            <?php $freeShippingThreshold = 49; ?>
-                            <?php if ($total >= $freeShippingThreshold): ?>
+                            <?php $freeShippingThreshold = 200; ?>
+                            <?php $freeShippingEarned = $total >= $freeShippingThreshold; ?>
+                            <?php if ($freeShippingEarned): ?>
                             You've earned free shipping!
                             <?php else: ?>
                             Spend <?= formatPrice($freeShippingThreshold - $total) ?> more for free shipping
@@ -95,7 +96,7 @@
                             </svg>
                         </div>
                         <p class="title text-body-l fw-normal mb-8">Buying for a loved one?</p>
-                        <p class="desc cl-text-5 mb-24">Send personalized message on card along with a gift wrapper at $20</p>
+                        <p class="desc cl-text-5 mb-24">Send personalized message on card along with a gift wrapper</p>
                         <a href="#" class="tf-btn-line style-purple fw-normal">ADD GIFT WRAP</a>
                     </div>
                     <div class="box-checkout">
@@ -135,21 +136,14 @@
                                     </div>
                                     <div class="zipcode-message success text-body-s" style="display: none">
                                         <p class="msg-text_1 fw-normal mb-6"><i class="icon icon-Check fs-16"></i>Shipping option available</p>
-                                        <p class="msg-text_2">Standard delivery — <span class="fw-normal"> $18.61 USD</span></p>
+                                        <p class="msg-text_2">Standard delivery — <span class="fw-normal"> Calculated at checkout</span></p>
                                     </div>
                                     <div class="tf-field">
                                         <label for="shipping-country-checkout" class="text-body-xs">Country</label>
                                         <div class="tf-select w-100">
                                             <select id="shipping-country-checkout" class="shipping-country style-4" name="address[country]" data-default="">
-                                                <option value="United States">United States</option>
-                                                <option value="Vietnam" selected>Vietnam</option>
+                                                <option value="Tunisia" selected>Tunisia</option>
                                             </select>
-                                        </div>
-                                    </div>
-                                    <div class="tf-field">
-                                        <label for="shipping-province-checkout" class="text-body-xs">Province</label>
-                                        <div class="tf-select w-100">
-                                            <select id="shipping-province-checkout" class="shipping-province style-4" name="address[province]" data-default=""></select>
                                         </div>
                                     </div>
                                     <div class="tf-field">

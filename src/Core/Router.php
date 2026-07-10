@@ -35,7 +35,7 @@ class Router
             'method'     => $method,
             'pattern'    => $pattern,
             'handler'    => $handler,
-            'middleware' => $middleware ?? [],
+            'middleware' => array_merge($this->middleware, $middleware ?? []),
         ];
     }
 
@@ -58,9 +58,7 @@ class Router
             if (preg_match($route['pattern'], $uri, $matches)) {
                 $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
 
-                $allMiddleware = array_merge($this->middleware, $route['middleware']);
-
-                foreach ($allMiddleware as $mwClass) {
+                foreach ($route['middleware'] as $mwClass) {
                     $middleware = new $mwClass();
                     $result = $middleware->handle();
                     if ($result !== null) {

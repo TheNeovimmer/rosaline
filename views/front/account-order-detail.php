@@ -35,7 +35,7 @@
                                     <span class="ic-wrap"><i class="icon icon-CircleCheck"></i></span>
                                     <div class="tl-content">
                                         <div class="info_left">
-                                            <p class="tl_title fw-normal mb-6"><?= e(ucfirst(str_replace('_', ' ', $entry['status']))) ?></p>
+                                            <p class="tl_title fw-normal mb-6"><?= e(ucfirst(str_replace('_', ' ', $entry['to_status'] ?? ''))) ?></p>
                                             <p class="tl_desc text-body-s cl-text-5"><?= e($entry['notes'] ?? '') ?> — <?= formatDate($entry['created_at']) ?></p>
                                         </div>
                                     </div>

@@ -23,7 +23,7 @@
                 <div class="container">
                     <div class="footer-inner_wrap">
                         <div class="ft-contact me-lg-auto">
-                            <a href="index.php" class="logo-site">
+                            <a href="<?= url() ?>" class="logo-site">
                                 <img loading="lazy" width="204" height="48" src="assets/images/logo/logo-white.svg" alt="Logo">
                             </a>
                             <ul class="tf-list vertical">
@@ -37,11 +37,11 @@
                             <p class="footer-heading footer-heading-mobile h6 font-instrument_serif text-white">Shop by Category</p>
                             <div class="tf-collapse-content">
                                 <ul class="footer-menu-list">
-                                    <li><a href="shop.php" class="fw-normal cl-text-2 link-white text-uppercase">Cleansers</a></li>
-                                    <li><a href="shop.php" class="fw-normal cl-text-2 link-white text-uppercase">Serums</a></li>
-                                    <li><a href="shop.php" class="fw-normal cl-text-2 link-white text-uppercase">Moisturizers</a></li>
-                                    <li><a href="shop.php" class="fw-normal cl-text-2 link-white text-uppercase">SPF / Sun Care</a></li>
-                                    <li><a href="shop.php" class="fw-normal cl-text-2 link-white text-uppercase">Skincare Sets</a></li>
+                                    <li><a href="<?= url('shop') ?>" class="fw-normal cl-text-2 link-white text-uppercase">Cleansers</a></li>
+                                    <li><a href="<?= url('shop') ?>" class="fw-normal cl-text-2 link-white text-uppercase">Serums</a></li>
+                                    <li><a href="<?= url('shop') ?>" class="fw-normal cl-text-2 link-white text-uppercase">Moisturizers</a></li>
+                                    <li><a href="<?= url('shop') ?>" class="fw-normal cl-text-2 link-white text-uppercase">SPF / Sun Care</a></li>
+                                    <li><a href="<?= url('shop') ?>" class="fw-normal cl-text-2 link-white text-uppercase">Skincare Sets</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -50,10 +50,10 @@
                             <p class="footer-heading footer-heading-mobile h6 font-instrument_serif text-white">Customer Care</p>
                             <div class="tf-collapse-content">
                                 <ul class="footer-menu-list">
-                                    <li><a href="faq.php" class="fw-normal cl-text-2 link-white text-uppercase">FAQs</a></li>
-                                    <li><a href="term-of-service.php" class="fw-normal cl-text-2 link-white text-uppercase">Shipping & Returns</a></li>
-                                    <li><a href="contact.php" class="fw-normal cl-text-2 link-white text-uppercase">Track Order</a></li>
-                                    <li><a href="contact.php" class="fw-normal cl-text-2 link-white text-uppercase">Contact Us</a></li>
+                                    <li><a href="<?= url('faqs') ?>" class="fw-normal cl-text-2 link-white text-uppercase">FAQs</a></li>
+                                    <li><a href="<?= url('terms-of-service') ?>" class="fw-normal cl-text-2 link-white text-uppercase">Shipping & Returns</a></li>
+                                    <li><a href="<?= url('contact') ?>" class="fw-normal cl-text-2 link-white text-uppercase">Track Order</a></li>
+                                    <li><a href="<?= url('contact') ?>" class="fw-normal cl-text-2 link-white text-uppercase">Contact Us</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -62,11 +62,11 @@
                             <p class="footer-heading footer-heading-mobile h6 font-instrument_serif text-white">About & Resources</p>
                             <div class="tf-collapse-content">
                                 <ul class="footer-menu-list">
-                                    <li><a href="about.php" class="fw-normal cl-text-2 link-white text-uppercase">Our Story</a></li>
-                                    <li><a href="term-of-service.php" class="fw-normal cl-text-2 link-white text-uppercase">Ingredients Guide</a></li>
-                                    <li><a href="blog.php" class="fw-normal cl-text-2 link-white text-uppercase">Rosaline Blog</a></li>
-                                    <li><a href="term-of-service.php" class="fw-normal cl-text-2 link-white text-uppercase">Careers</a></li>
-                                    <li><a href="term-of-service.php" class="fw-normal cl-text-2 link-white text-uppercase">Affiliate Program</a></li>
+                                    <li><a href="<?= url('about') ?>" class="fw-normal cl-text-2 link-white text-uppercase">Our Story</a></li>
+                                    <li><a href="<?= url('terms-of-service') ?>" class="fw-normal cl-text-2 link-white text-uppercase">Ingredients Guide</a></li>
+                                    <li><a href="<?= url('blog') ?>" class="fw-normal cl-text-2 link-white text-uppercase">Rosaline Blog</a></li>
+                                    <li><a href="<?= url('terms-of-service') ?>" class="fw-normal cl-text-2 link-white text-uppercase">Careers</a></li>
+                                    <li><a href="<?= url('terms-of-service') ?>" class="fw-normal cl-text-2 link-white text-uppercase">Affiliate Program</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -88,8 +88,8 @@
                         </ul>
                         <div class="br-line type-vertical lg-d-none"></div>
                         <ul class="tf-list justify-content-end">
-                            <li><a href="privacy-policy.php" class="fw-normal cl-text-2 link-white text-uppercase">Privacy Policy</a></li>
-                            <li><a href="term-of-service.php" class="fw-normal cl-text-2 link-white text-uppercase">Terms & Conditions</a></li>
+                            <li><a href="<?= url('privacy-policy') ?>" class="fw-normal cl-text-2 link-white text-uppercase">Privacy Policy</a></li>
+                            <li><a href="<?= url('terms-of-service') ?>" class="fw-normal cl-text-2 link-white text-uppercase">Terms & Conditions</a></li>
                         </ul>
                     </div>
                 </div>
@@ -201,7 +201,7 @@
                     <i class="icon icon-Close btn-close-popup fs-24" data-bs-dismiss="offcanvas"></i>
                 </div>
                 <div class="cart-threshold">
-                    <p class="text text-body-s fw-normal mb-8">Spend $223.00 more for free shipping</p>
+                    <p class="text text-body-s fw-normal mb-8">Spend <?= formatPrice(200) ?> more for free shipping</p>
                     <div class="tf-progress-bar tf-progress-ship"><div class="value" style="width: 0%;" data-progress="25"></div></div>
                 </div>
                 <div class="br-line bg-line-5"></div>
@@ -217,7 +217,7 @@
                                         <p class="text-emp text-body-l fw-normal">Your cart is empty</p>
                                         <p class="text-body-s cl-text-5">Looks like you haven't added anything yet.<br>Start browsing and find something you'll love.</p>
                                     </div>
-                                    <div class="shop-empty_bot"><a href="shop.php" class="tf-btn style-2 type-2">Continue Shopping</a></div>
+                                    <div class="shop-empty_bot"><a href="<?= url('shop') ?>" class="tf-btn style-2 type-2">Continue Shopping</a></div>
                                 </div>
                             </div>
                         </div>
@@ -226,12 +226,12 @@
                         <div class="tf-mini-cart-total text-body-l fw-normal">
                             <span>Estimated total</span>
                             <div class="price-wrap gap-6">
-                                <span class="price-new tf-totals-total-value fw-normal">$0.00</span>
+                                <span class="price-new tf-totals-total-value fw-normal"><?= formatPrice(0) ?></span>
                             </div>
                         </div>
                         <div class="tf-mini-cart-view-checkout">
-                            <a href="cart.php" class="tf-btn style-2 type-2 btn-light">View cart</a>
-                            <a href="checkout.php" class="tf-btn style-2 type-2">Check out</a>
+                            <a href="<?= url('cart') ?>" class="tf-btn style-2 type-2 btn-light">View cart</a>
+                            <a href="<?= url('checkout') ?>" class="tf-btn style-2 type-2">Check out</a>
                         </div>
                         <p class="text-body-s text-center cl-text-5">Tax and shipping calculated at checkout</p>
                     </div>
@@ -324,32 +324,41 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content product-thumbs-slider">
                 <div class="col-left">
-                    <div dir="ltr" class="swiper swiper-quickview">
-                        <div class="swiper-wrapper">
-                            <div class="swiper-slide"><div class="item"><img loading="lazy" width="591" height="714" src="assets/images/product/single/detail-1.jpg" alt="Image"></div></div>
-                            <div class="swiper-slide"><div class="item"><img loading="lazy" width="591" height="714" src="assets/images/product/single/detail-1_2.jpg" alt="Image"></div></div>
-                            <div class="swiper-slide"><div class="item"><img loading="lazy" width="591" height="714" src="assets/images/product/single/detail-1_3.jpg" alt="Image"></div></div>
-                            <div class="swiper-slide"><div class="item"><img loading="lazy" width="591" height="714" src="assets/images/product/single/detail-1_4.jpg" alt="Image"></div></div>
-                            <div class="swiper-slide"><div class="item"><img loading="lazy" width="591" height="714" src="assets/images/product/single/detail-1_5.jpg" alt="Image"></div></div>
-                        </div>
-                        <div class="sw-line-default style-2 tf-sw-pagination pst-1"></div>
-                        <div class="group-btn-nav">
-                            <div class="single-slide-prev tf-sw-nav"><i class="icon icon-ArrowCaretLeft"></i></div>
-                            <div class="single-slide-next tf-sw-nav"><i class="icon icon-ArrowCaretRight"></i></div>
-                        </div>
+                    <div id="qv-image-container" class="d-flex align-items-center justify-content-center" style="min-height:400px;background:#f8f6f3">
+                        <p class="text-body-s cl-text-5">Select a product</p>
                     </div>
                 </div>
                 <div class="col-right">
                     <i class="icon icon-Close btn-close-popup fs-24" data-bs-dismiss="modal"></i>
                     <div class="tf-product-info-wrap position-relative mt-md-0 tf-quick-prd_variant">
-                        <div class="tf-zoom-main sticky-top"></div>
                         <div class="tf-product-info-list other-image-zoom">
                             <div class="tf-product-info-heading">
-                                <div class="product-infor-meta meta_rate">
-                                    <div class="star-wrap"><i class="icon icon-Star-Sharp"></i><i class="icon icon-Star-Sharp"></i><i class="icon icon-Star-Sharp"></i><i class="icon icon-Star-Sharp"></i><i class="icon icon-Star-Sharp"></i></div>
-                                    <span class="text-body-s cl-text-5">4.9/5 (1,245 reviews)</span>
+                                <div class="product-infor-meta meta_rate" id="qv-rating"></div>
+                                <h5 class="product-infor-name font-instrument_serif fw-normal" id="qv-name"></h5>
+                                <div class="product-infor-price" id="qv-price"></div>
+                            </div>
+                            <div class="tf-product-variant">
+                                <div class="tf-product-total-quantity">
+                                    <div class="group-action">
+                                        <form method="POST" action="<?= url('cart/add') ?>" class="d-flex gap-10 w-100" id="qv-cart-form">
+                                            <?= csrf_field() ?>
+                                            <input type="hidden" name="product_id" id="qv-product-id" value="">
+                                            <div class="wg-quantity">
+                                                <button type="button" class="btn-quantity btn-decrease"><i class="icon icon-Minus"></i></button>
+                                                <input class="quantity-product" type="text" name="quantity" value="1">
+                                                <button type="button" class="btn-quantity btn-increase"><i class="icon icon-Plus"></i></button>
+                                            </div>
+                                            <button type="submit" class="btn-action-price tf-btn style-2 type-2 btn-light w-100">Add To Cart</button>
+                                        </form>
+                                    </div>
+                                    <form method="POST" action="<?= url('cart/add') ?>" id="qv-buy-form" data-ajax="false" style="display:inline">
+                                        <?= csrf_field() ?>
+                                        <input type="hidden" name="product_id" id="qv-buy-product-id" value="">
+                                        <input type="hidden" name="quantity" value="1">
+                                        <input type="hidden" name="redirect" value="checkout">
+                                        <button type="submit" class="tf-btn style-2 type-2 w-100">Buy It Now</button>
+                                    </form>
                                 </div>
-                                <h5 class="product-infor-name font-instrument_serif fw-normal">AHA Rosaline Serum 10%</h5>
                             </div>
                         </div>
                     </div>
@@ -357,6 +366,147 @@
             </div>
         </div>
     </div>
+    <script>
+    (function() {
+        var csrf = <?= json_encode(csrf_token()) ?>;
+        var baseUrl = <?= json_encode(url('')) ?>;
+
+        function showToast(msg, type) {
+            var el = document.createElement('div');
+            el.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:99999;padding:12px 20px;border-radius:8px;font-size:14px;color:#fff;max-width:350px;' + (type === 'error' ? 'background:#e74c3c;' : 'background:#2ecc71;');
+            el.textContent = msg;
+            document.body.appendChild(el);
+            setTimeout(function(){ el.remove(); }, 3000);
+        }
+
+        function cartFetch(url, body, cb) {
+            fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: body })
+            .then(function(r){ return r.json(); })
+            .then(cb)
+            .catch(function(){ showToast('Cart error', 'error'); });
+        }
+
+        document.addEventListener('click', function(e) {
+            var btn = e.target.closest('.quick-view-btn');
+            if (btn) {
+                e.preventDefault();
+                var id = btn.getAttribute('data-product-id');
+                if (!id) return;
+                var c = document.getElementById('qv-image-container');
+                c.innerHTML = '<div class="spinner"></div>';
+                document.getElementById('qv-name').textContent = 'Loading...';
+                document.getElementById('qv-price').innerHTML = '';
+                document.getElementById('qv-rating').innerHTML = '';
+                fetch(baseUrl + 'quick-view/' + id).then(function(r){ return r.json(); }).then(function(d){
+                    if (!d.success) { c.innerHTML = '<p class="text-body-s cl-text-5">Product not found</p>'; return; }
+                    var p = d.product;
+                    var img = d.images && d.images[0] ? baseUrl + d.images[0].replace(/^\//,'') : d.imageUrl;
+                    c.innerHTML = '<img loading="lazy" width="400" height="500" src="' + img + '" alt="' + p.name + '" style="max-width:100%;height:auto;object-fit:contain">';
+                    document.getElementById('qv-name').textContent = p.name;
+                    document.getElementById('qv-price').innerHTML = '<span class="price-on-sale text-body-l fw-normal text-primary">' + d.price + '</span>';
+                    document.getElementById('qv-product-id').value = p.id;
+                    document.getElementById('qv-buy-product-id').value = p.id;
+                    var stars = '';
+                    var r = Math.round(d.rating || 5);
+                    for (var s=0;s<5;s++) stars += '<i class="icon ' + (s < r ? 'icon-Star-Sharp' : 'icon-StarSroke') + '"></i>';
+                    document.getElementById('qv-rating').innerHTML = '<div class="star-wrap">' + stars + '</div><span class="text-body-s cl-text-5">' + (d.rating || 5).toFixed(1) + '/5</span>';
+                    var modal = new bootstrap.Modal(document.getElementById('modalQuickView'));
+                    modal.show();
+                }).catch(function(){
+                    c.innerHTML = '<p class="text-body-s text-danger">Failed to load product</p>';
+                });
+                return;
+            }
+
+            var minus = e.target.closest('.minus-quantity');
+            if (minus) {
+                var row = minus.closest('[data-product-id]');
+                if (!row) return;
+                var id = row.getAttribute('data-product-id');
+                var inp = row.querySelector('.quantity-product');
+                var qty = Math.max(0, parseInt(inp.value) - 1);
+                if (qty <= 0) {
+                    cartFetch(baseUrl + 'cart/remove', '_csrf=' + csrf + '&product_id=' + id, function(){ window.location.reload(); });
+                } else {
+                    inp.value = qty;
+                    cartFetch(baseUrl + 'cart/update', '_csrf=' + csrf + '&product_id=' + id + '&quantity=' + qty, function(){ window.location.reload(); });
+                }
+                return;
+            }
+
+            var plus = e.target.closest('.plus-quantity');
+            if (plus) {
+                var row = plus.closest('[data-product-id]');
+                if (!row) return;
+                var id = row.getAttribute('data-product-id');
+                var inp = row.querySelector('.quantity-product');
+                var qty = parseInt(inp.value) + 1;
+                inp.value = qty;
+                cartFetch(baseUrl + 'cart/update', '_csrf=' + csrf + '&product_id=' + id + '&quantity=' + qty, function(){ window.location.reload(); });
+                return;
+            }
+
+            var rem = e.target.closest('.cart_remove');
+            if (rem) {
+                e.preventDefault();
+                var row = rem.closest('[data-product-id]');
+                if (!row) return;
+                var id = row.getAttribute('data-product-id');
+                cartFetch(baseUrl + 'cart/remove', '_csrf=' + csrf + '&product_id=' + id, function(){ window.location.reload(); });
+            }
+        });
+
+        document.addEventListener('submit', function(e) {
+            var form = e.target;
+            var action = form.getAttribute('action') || '';
+
+            if (action.indexOf('wishlist/add') !== -1 || action.indexOf('wishlist/remove') !== -1) {
+                e.preventDefault();
+                var fd = new FormData(form);
+                fetch(action, { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(function(r){ return r.json(); })
+                .then(function(d){
+                    if (d.success) {
+                        var added = d.added !== undefined ? d.added : true;
+                        var icon = form.querySelector('.icon');
+                        if (icon) {
+                            if (added) {
+                                icon.classList.remove('icon-Hearth');
+                                icon.classList.add('icon-HearthFill');
+                            } else {
+                                icon.classList.remove('icon-HearthFill');
+                                icon.classList.add('icon-Hearth');
+                            }
+                            icon.closest('button').classList.toggle('addwishlist', added);
+                        }
+                        var tip = form.querySelector('.tooltip');
+                        if (tip) tip.textContent = added ? 'Remove Wishlist' : 'Add to Wishlist';
+                        var tw = form.querySelector('.text-wish');
+                        if (tw) tw.textContent = added ? 'Remove Wishlist' : 'Add to wishlist';
+                        showToast(added ? 'Added to wishlist' : 'Removed from wishlist');
+                    }
+                })
+                .catch(function(){ showToast('Error updating wishlist', 'error'); });
+                return;
+            }
+
+            if (action.indexOf('cart/add') !== -1 && form.getAttribute('data-ajax') !== 'false') {
+                e.preventDefault();
+                var fd = new FormData(form);
+                fetch(action, { method: 'POST', body: fd, headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(function(r){ return r.json(); })
+                .then(function(d){
+                    if (d.success) {
+                        showToast('Added to cart');
+                        var el = document.querySelector('.number-order');
+                        if (el && d.cart_count) { el.textContent = d.cart_count; el.style.display = ''; }
+                    }
+                })
+                .catch(function(){ showToast('Error adding to cart', 'error'); });
+            }
+        });
+    })();
+    </script>
     <script src="assets/js/plugin/bootstrap.min.js"></script>
     <script src="assets/js/plugin/jquery.min.js"></script>
     <script src="assets/js/plugin/swiper-bundle.min.js"></script>

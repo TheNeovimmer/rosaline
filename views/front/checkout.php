@@ -37,15 +37,16 @@
                     </div>
                     <fieldset class="tf-field">
                         <label for="deliveryPhone" class="text-body-xs">Phone (+216)</label>
-                        <input id="deliveryPhone" class="style-4" type="tel" name="phone" placeholder="+216 XX XXX XXX" value="<?= e(old('phone')) ?>" pattern="^\+216[2-9]\d{7}$" title="+216 followed by 8 digits" required>
+                        <input id="deliveryPhone" class="style-4" type="tel" name="phone" placeholder="+216 XX XXX XXX" value="<?= e(old('phone')) ?>" required>
+                        <small class="text-body-xs cl-text-5 mt-4 d-block">Enter Tunisian number: +216XXXXXXXX or 0XXXXXXXX</small>
                         <?php if (error('phone')): ?><p class="text-body-xs text-danger mt-4"><?= e(error('phone')) ?></p><?php endif; ?>
                     </fieldset>
                     <fieldset class="tf-field">
                         <label for="governorate" class="text-body-xs">Governorate</label>
                         <select name="governorate_id" id="governorate" class="style-4" required>
-                            <option value="">Select governorate</option>
+                            <option value="" data-fee="0">Select governorate</option>
                             <?php foreach ($data['governorates'] as $g): ?>
-                            <option value="<?= $g['id'] ?>" <?= old('governorate_id') == $g['id'] ? 'selected' : '' ?>><?= e($g['name_en']) ?></option>
+                            <option value="<?= $g['id'] ?>" data-fee="<?= (float)$g['shipping_fee'] ?>" <?= old('governorate_id') == $g['id'] ? 'selected' : '' ?>><?= e($g['name_en']) ?> (<?= formatPrice((float)$g['shipping_fee']) ?>)</option>
                             <?php endforeach; ?>
                         </select>
                         <?php if (error('governorate_id')): ?><p class="text-body-xs text-danger mt-4"><?= e(error('governorate_id')) ?></p><?php endif; ?>
@@ -105,8 +106,10 @@
     </div>
     <div class="col-right flat-spacing-2" style="margin-top:40px">
         <div class="content-right sticky-top">
+            <p class="h7 font-instrument_serif mb-16">Order Summary</p>
             <ul class="list-order-product">
                 <?php $cartItems = $cart ?? []; ?>
+                <?php $freeThreshold = 200; ?>
                 <?php foreach ($cartItems as $item): ?>
                 <li class="order-item">
                     <a href="<?= url('product/' . $item['slug']) ?>" class="img-prd">
@@ -123,26 +126,67 @@
                 </li>
                 <?php endforeach; ?>
             </ul>
-            <?php if (hasErrors()): ?>
-            <div class="alert alert-danger py-2 mt-3">Please check the form for errors.</div>
+            <?php if (error('general')): ?>
+            <div class="alert alert-danger py-2 mt-3"><?= e(error('general')) ?></div>
             <?php endif; ?>
             <ul class="box-total">
                 <li class="fw-normal">
                     <span>Subtotal (<?= count($cartItems) ?> items)</span>
                     <span><?= formatPrice($total) ?></span>
                 </li>
-                <li class="fw-normal">
+                <li class="fw-normal" id="shipping-row">
                     <span>Shipping</span>
-                    <span>Calculated at next step</span>
+                    <span id="shipping-display">Select governorate</span>
                 </li>
+                <?php if ($total < $freeThreshold): ?>
+                <li class="fw-normal text-body-xs cl-text-5">
+                    <span>Free shipping on orders over <?= formatPrice($freeThreshold) ?></span>
+                    <span></span>
+                </li>
+                <?php endif; ?>
                 <li>
                     <p class="d-grid">
                         <span class="fw-normal mb-8 text-body-l">Total</span>
                         <span class="text-body-xs cl-text-5">Cash on Delivery</span>
                     </p>
-                    <span class="fw-normal"><?= formatPrice($total) ?></span>
+                    <span class="fw-normal" id="total-display"><?= formatPrice($total) ?></span>
                 </li>
             </ul>
+            <div class="mt-16 p-12" style="background:#f8f6f3;border-radius:8px">
+                <p class="text-body-xs cl-text-5 mb-4"><i class="icon icon-Shield fs-14"></i> Secure checkout</p>
+                <p class="text-body-xs cl-text-5">Pay when you receive. Your payment info is safe.</p>
+            </div>
         </div>
     </div>
 </div>
+<script>
+(function() {
+    var subTotal = <?= json_encode($total) ?>;
+    var freeThreshold = <?= json_encode($freeThreshold) ?>;
+    var $gov = document.getElementById('governorate');
+    var $shipDisplay = document.getElementById('shipping-display');
+    var $totalDisplay = document.getElementById('total-display');
+
+    function updateShipping() {
+        var opt = $gov.options[$gov.selectedIndex];
+        var fee = parseFloat(opt.getAttribute('data-fee')) || 0;
+        var total = subTotal;
+        if (freeThreshold > 0 && subTotal >= freeThreshold) {
+            fee = 0;
+            $shipDisplay.textContent = 'Free (' + formatPrice(fee) + ')';
+        } else if (fee > 0) {
+            $shipDisplay.textContent = formatPrice(fee);
+        } else {
+            $shipDisplay.textContent = 'TBD';
+        }
+        total = subTotal + fee;
+        $totalDisplay.textContent = formatPrice(total);
+    }
+
+    function formatPrice(price) {
+        return price.toFixed(3) + ' TND';
+    }
+
+    if ($gov) $gov.addEventListener('change', updateShipping);
+})();
+</script>

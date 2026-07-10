@@ -11,6 +11,7 @@ $router->get('/shop', ['App\Controllers\ShopController', 'index']);
 $router->get('/shop/category/{slug}', ['App\Controllers\ShopController', 'category']);
 $router->get('/product/{slug}', ['App\Controllers\ProductController', 'show']);
 $router->post('/product/{slug}/review', ['App\Controllers\ProductController', 'addReview']);
+$router->get('/quick-view/{id}', ['App\Controllers\ShopController', 'quickView']);
 
 $router->get('/cart', ['App\Controllers\CartController', 'index']);
 $router->post('/cart/add', ['App\Controllers\CartController', 'add']);

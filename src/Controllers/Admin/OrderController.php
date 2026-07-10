@@ -114,7 +114,7 @@ class OrderController extends Controller
         }
 
         $newStatus = trim($_POST['status'] ?? '');
-        $notes = trim($_POST['notes'] ?? '');
+        $note = trim($_POST['note'] ?? '');
 
         $order = Order::find($id);
         if (!$order) {
@@ -129,7 +129,7 @@ class OrderController extends Controller
             return;
         }
 
-        Order::updateStatus($id, $newStatus, $notes);
+        Order::updateStatus($id, $newStatus, $note, Auth::id());
 
         $this->withSuccess("Order status updated to {$newStatus}.");
         $this->redirect('/admin/orders/' . $id);

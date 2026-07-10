@@ -90,6 +90,10 @@ abstract class Controller
 
     protected function adminView(string $view, array $data = []): void
     {
+        $sessionErrors = Session::getFlash('errors');
+        if (is_array($sessionErrors) && empty($data['errors'])) {
+            $data['errors'] = $sessionErrors;
+        }
         View::render($view, $data, 'admin');
     }
 

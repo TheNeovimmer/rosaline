@@ -74,7 +74,12 @@ class CartController extends Controller
         }
 
         $this->withSuccess($product['name'] . ' added to cart.');
-        $this->redirectBack();
+        $redirect = $_POST['redirect'] ?? '';
+        if ($redirect === 'checkout') {
+            $this->redirect('/checkout');
+        } else {
+            $this->redirectBack();
+        }
     }
 
     public function update(): void

@@ -20,46 +20,12 @@ class DashboardController extends Controller
         $totalRevenue = (float) (Database::fetch("SELECT COALESCE(SUM(total), 0) as total FROM orders WHERE status != 'cancelled'")['total'] ?? 0);
 
         $todayStats = Database::fetch(
-            "SELECT COUNT(*) as orders, COALESCE(SUM(total), 0) as revenue, COALESCE(SUM(CASE WHEN payment_method = 'cod' THEN total ELSE 0 END), 0) as cod_revenue
+            "SELECT COUNT(*) as orders, COALESCE(SUM(total), 0) as revenue
              FROM orders WHERE status != 'cancelled' AND DATE(created_at) = CURDATE()"
         );
 
-        $codStats = Database::fetch(
-            "SELECT COUNT(*) as total_cod, COALESCE(SUM(CASE WHEN payment_status = 'pending' THEN 1 ELSE 0 END), 0) as pending_cod,
-                    COALESCE(SUM(CASE WHEN payment_status = 'paid' THEN total ELSE 0 END), 0) as collected_cod
-             FROM orders WHERE payment_method = 'cod'"
-        );
-
-        $paymentBreakdown = Database::fetchAll(
-            "SELECT payment_method, COUNT(*) as count, COALESCE(SUM(total), 0) as total
-             FROM orders GROUP BY payment_method ORDER BY count DESC"
-        );
-
-        $recentOrders = Database::fetchAll(
-            "SELECT o.*, u.name as user_name
-             FROM orders o
-             LEFT JOIN users u ON u.id = o.user_id
-             ORDER BY o.created_at DESC
-             LIMIT 10"
-        );
-
-        $monthlyRevenue = Database::fetchAll(
-            "SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COALESCE(SUM(total), 0) as revenue
-             FROM orders
-             WHERE status != 'cancelled' AND created_at >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
-             GROUP BY DATE_FORMAT(created_at, '%Y-%m')
-             ORDER BY month ASC"
-        );
-
-        $ordersByStatus = Database::fetchAll(
-            "SELECT status, COUNT(*) as count
-             FROM orders
-             GROUP BY status
-             ORDER BY count DESC"
-        );
-
-        $pendingReturns = (int) (Database::fetch("SELECT COUNT(*) as cnt FROM orders WHERE status = 'return_requested'")['cnt'] ?? 0);
         $pendingOrders = (int) (Database::fetch("SELECT COUNT(*) as cnt FROM orders WHERE status = 'pending'")['cnt'] ?? 0);
+        $pendingReturns = (int) (Database::fetch("SELECT COUNT(*) as cnt FROM orders WHERE status = 'return_requested'")['cnt'] ?? 0);
 
         $lowStockProducts = Database::fetchAll(
             "SELECT id, name, stock_quantity, low_stock_threshold FROM products WHERE stock_quantity <= COALESCE(low_stock_threshold, 5) ORDER BY stock_quantity ASC LIMIT 5"
@@ -75,6 +41,14 @@ class DashboardController extends Controller
              LIMIT 5"
         );
 
+        $recentOrders = Database::fetchAll(
+            "SELECT o.*, u.name as user_name
+             FROM orders o
+             LEFT JOIN users u ON u.id = o.user_id
+             ORDER BY o.created_at DESC
+             LIMIT 5"
+        );
+
         $recentActivity = Database::fetchAll(
             "SELECT a.*, u.name as user_name
              FROM activity_logs a
@@ -83,36 +57,62 @@ class DashboardController extends Controller
              LIMIT 5"
         );
 
-        $pendingCodOrders = Database::fetchAll(
-            "SELECT o.id, o.order_number, o.total, o.created_at, u.name as user_name
-             FROM orders o
-             LEFT JOIN users u ON u.id = o.user_id
-             WHERE o.payment_method = 'cod' AND o.payment_status = 'pending'
-             ORDER BY o.created_at DESC
-             LIMIT 5"
+        $dailyRevenue = Database::fetchAll(
+            "SELECT DATE(created_at) as day, COALESCE(SUM(total), 0) as revenue, COUNT(*) as orders
+             FROM orders
+             WHERE status != 'cancelled' AND created_at >= DATE_SUB(CURDATE(), INTERVAL 13 DAY)
+             GROUP BY DATE(created_at)
+             ORDER BY day ASC"
         );
 
+        $ordersByStatus = Database::fetchAll(
+            "SELECT status, COUNT(*) as count FROM orders GROUP BY status ORDER BY count DESC"
+        );
+
+        $thisMonth = Database::fetch(
+            "SELECT COALESCE(SUM(total), 0) as revenue, COUNT(*) as orders
+             FROM orders WHERE status != 'cancelled' AND DATE_FORMAT(created_at, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')"
+        );
+
+        $lastMonth = Database::fetch(
+            "SELECT COALESCE(SUM(total), 0) as revenue, COUNT(*) as orders
+             FROM orders WHERE status != 'cancelled' AND DATE_FORMAT(created_at, '%Y-%m') = DATE_FORMAT(DATE_SUB(CURDATE(), INTERVAL 1 MONTH), '%Y-%m')"
+        );
+
+        $newCustomersThisMonth = (int) (Database::fetch(
+            "SELECT COUNT(*) as cnt FROM users WHERE DATE_FORMAT(created_at, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')"
+        )['cnt'] ?? 0);
+
+        $avgOrderValue = (float) (Database::fetch(
+            "SELECT COALESCE(AVG(total), 0) as avg FROM orders WHERE status != 'cancelled'"
+        )['avg'] ?? 0);
+
+        $deliveredOrders = (int) (Database::fetch(
+            "SELECT COUNT(*) as cnt FROM orders WHERE status = 'delivered'"
+        )['cnt'] ?? 0);
+
         $this->view('admin/dashboard', [
-            'totalProducts'     => $totalProducts,
-            'totalOrders'       => $totalOrders,
-            'totalUsers'        => $totalUsers,
-            'totalRevenue'      => $totalRevenue,
-            'todayOrders'       => (int) ($todayStats['orders'] ?? 0),
-            'todayRevenue'      => (float) ($todayStats['revenue'] ?? 0),
-            'todayCodRevenue'   => (float) ($todayStats['cod_revenue'] ?? 0),
-            'totalCod'          => (int) ($codStats['total_cod'] ?? 0),
-            'pendingCod'        => (int) ($codStats['pending_cod'] ?? 0),
-            'collectedCod'      => (float) ($codStats['collected_cod'] ?? 0),
-            'paymentBreakdown'  => $paymentBreakdown,
-            'recentOrders'      => $recentOrders,
-            'monthlyRevenue'    => $monthlyRevenue,
-            'ordersByStatus'    => $ordersByStatus,
-            'lowStockProducts'  => $lowStockProducts,
-            'topProducts'       => $topProducts,
-            'recentActivity'    => $recentActivity,
-            'pendingCodOrders'  => $pendingCodOrders,
-            'pendingReturns'    => $pendingReturns,
-            'pendingOrders'     => $pendingOrders,
+            'totalProducts'        => $totalProducts,
+            'totalOrders'          => $totalOrders,
+            'totalUsers'           => $totalUsers,
+            'totalRevenue'         => $totalRevenue,
+            'todayOrders'          => (int) ($todayStats['orders'] ?? 0),
+            'todayRevenue'         => (float) ($todayStats['revenue'] ?? 0),
+            'pendingOrders'        => $pendingOrders,
+            'pendingReturns'       => $pendingReturns,
+            'lowStockProducts'     => $lowStockProducts,
+            'topProducts'          => $topProducts,
+            'recentOrders'         => $recentOrders,
+            'recentActivity'       => $recentActivity,
+            'ordersByStatus'       => $ordersByStatus,
+            'dailyRevenue'         => $dailyRevenue,
+            'thisMonthRevenue'     => (float) ($thisMonth['revenue'] ?? 0),
+            'thisMonthOrders'      => (int) ($thisMonth['orders'] ?? 0),
+            'lastMonthRevenue'     => (float) ($lastMonth['revenue'] ?? 0),
+            'lastMonthOrders'      => (int) ($lastMonth['orders'] ?? 0),
+            'newCustomersThisMonth'=> $newCustomersThisMonth,
+            'avgOrderValue'        => $avgOrderValue,
+            'deliveredOrders'      => $deliveredOrders,
         ], 'admin');
     }
 }

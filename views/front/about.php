@@ -238,8 +238,8 @@
                                 <div class="prd_info">
                                     <a href="<?= url('product/hydra-shine-lip-gloss') ?>" class="info__name fw-normal link-underline">Hydra Shine Lip Gloss</a>
                                     <div class="price-wrap">
-                                        <span class="price-new fw-normal text-primary">$32.00</span>
-                                        <span class="price-old fw-normal cl-text-6">$40.00</span>
+                                        <span class="price-new fw-normal text-primary"><?= formatPrice(32) ?></span>
+                                        <span class="price-old fw-normal cl-text-6"><?= formatPrice(40) ?></span>
                                     </div>
                                 </div>
                                 <a href="#shoppingCart" data-bs-toggle="offcanvas" class="tf-btn type-3">ADD</a>
@@ -264,8 +264,8 @@
                                 <div class="prd_info">
                                     <a href="<?= url('product/hydra-shine-lip-gloss') ?>" class="info__name fw-normal link-underline">Hydra Shine Lip Gloss</a>
                                     <div class="price-wrap">
-                                        <span class="price-new fw-normal text-primary">$32.00</span>
-                                        <span class="price-old fw-normal cl-text-6">$40.00</span>
+                                        <span class="price-new fw-normal text-primary"><?= formatPrice(32) ?></span>
+                                        <span class="price-old fw-normal cl-text-6"><?= formatPrice(40) ?></span>
                                     </div>
                                 </div>
                                 <a href="#shoppingCart" data-bs-toggle="offcanvas" class="tf-btn type-3">ADD</a>

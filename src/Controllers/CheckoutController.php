@@ -92,14 +92,8 @@ class CheckoutController extends Controller
             return;
         }
         $minAmount = (float) Setting::get('cod_min_amount', '0');
-        $maxAmount = (float) Setting::get('cod_max_amount', '0');
         if ($minAmount > 0 && $total < $minAmount) {
             $this->withErrors(['general' => ['Minimum order amount is ' . formatPrice($minAmount) . '.']]);
-            $this->redirectBack();
-            return;
-        }
-        if ($maxAmount > 0 && $total > $maxAmount) {
-            $this->withErrors(['general' => ['Maximum order amount is ' . formatPrice($maxAmount) . '.']]);
             $this->redirectBack();
             return;
         }

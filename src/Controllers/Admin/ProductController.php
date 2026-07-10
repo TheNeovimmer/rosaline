@@ -91,7 +91,7 @@ class ProductController extends Controller
             'stock_quantity'     => (int) ($_POST['stock_quantity'] ?? 0),
             'low_stock_threshold'=> max(1, (int) ($_POST['low_stock_threshold'] ?? 5)),
             'featured'           => (int) ($_POST['featured'] ?? 0),
-            'status'             => !empty($_POST['active']) ? 'active' : 'inactive',
+            'status'             => ($_POST['status'] ?? '') === 'active' ? 'active' : 'inactive',
         ];
 
         if (!empty($_FILES['image']['name'])) {
@@ -170,7 +170,7 @@ class ProductController extends Controller
             'stock_quantity'     => (int) ($_POST['stock_quantity'] ?? 0),
             'low_stock_threshold'=> max(1, (int) ($_POST['low_stock_threshold'] ?? 5)),
             'featured'           => (int) ($_POST['featured'] ?? 0),
-            'status'             => !empty($_POST['active']) ? 'active' : 'inactive',
+            'status'             => ($_POST['status'] ?? '') === 'active' ? 'active' : 'inactive',
         ];
 
         if (!empty($_FILES['image']['name'])) {

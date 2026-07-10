@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="<?= asset('css/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="<?= asset('css/admin.css') ?>">
     <link rel="shortcut icon" href="<?= asset('images/logo/favicon.png') ?>">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
 </head>
 <body>
     <?php $adminUser = \App\Core\Auth::user(); ?>
@@ -64,6 +65,8 @@
             <a href="<?= url('admin/categories') ?>" class="<?= str_contains($_SERVER['REQUEST_URI'], '/admin/categories') ? 'active' : '' ?>"><i class="icon icon-Grid2"></i> <span>Categories</span></a>
             <a href="<?= url('admin/orders') ?>" class="<?= str_contains($_SERVER['REQUEST_URI'], '/admin/orders') ? 'active' : '' ?>"><i class="icon icon-Truck"></i> <span>Orders</span></a>
             <a href="<?= url('admin/return-requests') ?>" class="<?= str_contains($_SERVER['REQUEST_URI'], '/admin/return-requests') ? 'active' : '' ?>"><i class="icon icon-Refresh"></i> <span>Returns</span></a>
+
+            <div class="sidebar-label collapse-label">Customers</div>
             <a href="<?= url('admin/users') ?>" class="<?= str_contains($_SERVER['REQUEST_URI'], '/admin/users') ? 'active' : '' ?>"><i class="icon icon-UserCircle"></i> <span>Users</span></a>
 
             <div class="sidebar-label collapse-label">Content</div>
@@ -98,6 +101,15 @@
             <?php endif; ?>
             <?php if (!empty($data['errors'])): ?>
                 <div class="alert-admin alert-danger"><?= implode('<br>', array_map('e', $data['errors'])) ?></div>
+            <?php elseif (hasErrors()): ?>
+                <?php $flashErrors = \App\Core\Session::getFlash('errors'); ?>
+                <?php if (is_array($flashErrors)): ?>
+                <div class="alert-admin alert-danger">
+                    <?php foreach ($flashErrors as $field => $errs): ?>
+                        <?php if (is_array($errs)): foreach ($errs as $err): ?><div><?= e($err) ?></div><?php endforeach; else: ?><div><?= e($errs) ?></div><?php endif; ?>
+                    <?php endforeach; ?>
+                </div>
+                <?php endif; ?>
             <?php endif; ?>
             <?= $content ?>
         </div>
@@ -152,14 +164,15 @@
         const html = document.documentElement;
         const savedTheme = localStorage.getItem('admin-theme') || 'light';
         html.setAttribute('data-theme', savedTheme);
-        if (themeToggle) {
-            themeToggle.addEventListener('click', function() {
-                const current = html.getAttribute('data-theme');
-                const next = current === 'dark' ? 'light' : 'dark';
-                html.setAttribute('data-theme', next);
-                localStorage.setItem('admin-theme', next);
-            });
-        }
+    if (themeToggle) {
+        themeToggle.addEventListener('click', function() {
+            const current = html.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', next);
+            localStorage.setItem('admin-theme', next);
+            document.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: next } }));
+        });
+    }
 
         // Sidebar collapse button (desktop only)
         const collapseBtn = document.getElementById('sidebarCollapseBtn');

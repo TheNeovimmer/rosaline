@@ -142,9 +142,13 @@
                                         </button>
                                     </form>
                                 </div>
-                                <a href="<?= url('checkout') ?>" class="tf-btn style-2 type-2 w-100">
-                                    Buy It Now
-                                </a>
+                                <form method="POST" action="<?= url('cart/add') ?>" data-ajax="false" style="display:inline">
+                                    <?= csrf_field() ?>
+                                    <input type="hidden" name="product_id" value="<?= $product['id'] ?>">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <input type="hidden" name="redirect" value="checkout">
+                                    <button type="submit" class="tf-btn style-2 type-2 w-100">Buy It Now</button>
+                                </form>
                             </div>
                         </div>
                         <div class="tf-product-extra-link">
@@ -168,7 +172,7 @@
                         <div class="tf-product-delivery-return">
                             <div class="product-delivery">
                                 <i class="icon icon-Box"></i>
-                                <p class="fw-normal">Free International Shipping over $120</p>
+                                <p class="fw-normal">Free Shipping over <?= formatPrice(200) ?></p>
                             </div>
                             <div class="product-delivery return">
                                 <i class="icon icon-Return"></i>
@@ -268,7 +272,7 @@
                                 </ul>
                                 <?php endif; ?>
                                 <ul class="product-action_list">
-                                    <li><a href="#modalQuickView" data-bs-toggle="modal" class="hover-tooltip tooltip-left box-icon"><span class="icon icon-EyeOpen"></span><span class="tooltip">Quick view</span></a></li>
+                                    <li><a href="#modalQuickView" data-bs-toggle="modal" data-product-id="<?= $rp['id'] ?>" class="hover-tooltip tooltip-left box-icon quick-view-btn"><span class="icon icon-EyeOpen"></span><span class="tooltip">Quick view</span></a></li>
                                     <li class="wishlist">
                                         <form method="POST" action="<?= url('wishlist/add') ?>" style="display:inline">
                                             <?= csrf_field() ?>

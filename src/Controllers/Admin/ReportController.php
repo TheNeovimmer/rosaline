@@ -18,7 +18,7 @@ class ReportController extends Controller
         $topProducts = Database::fetchAll(
             "SELECT p.id, p.name, p.slug, p.price, p.stock_quantity,
                     COALESCE(SUM(oi.quantity), 0) as total_sold,
-                    COALESCE(SUM(oi.quantity * oi.price), 0) as total_revenue
+                    COALESCE(SUM(oi.quantity * oi.product_price), 0) as total_revenue
              FROM products p
              LEFT JOIN order_items oi ON oi.product_id = p.id
              LEFT JOIN orders o ON o.id = oi.order_id AND o.status != 'cancelled'

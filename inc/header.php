@@ -50,10 +50,10 @@
                         <div dir="ltr" class="swiper tf-swiper swiper-topbar" data-direction="vertical" data-auto="true" data-loop="true" data-speed="1000">
                             <div class="swiper-wrapper">
                                 <div class="swiper-slide">
-                                    <p class="topbar-center text-white font-geist text-uppercase text-center fw-medium text-line-clamp-1">Free shipping on orders over $49! | Spring Beauty Sale - Up to 30% Off</p>
+                                    <p class="topbar-center text-white font-geist text-uppercase text-center fw-medium text-line-clamp-1">Free shipping on orders over <?= formatPrice(200) ?>! | Spring Beauty Sale - Up to 30% Off</p>
                                 </div>
                                 <div class="swiper-slide">
-                                    <p class="topbar-center text-white font-geist text-uppercase text-center fw-medium text-line-clamp-1">Members Save 10% Today — Join Rosaline Club</p>
+                                    <p class="topbar-center text-white font-geist text-uppercase text-center fw-medium text-line-clamp-1">Cash on Delivery — Pay when you receive</p>
                                 </div>
                             </div>
                         </div>
@@ -91,16 +91,16 @@
                                 <nav class="box-navigation d-none d-xl-block">
                                     <ul class="box-nav-menu font-geist">
                                         <li class="menu-item">
-                                            <a href="index.php" class="item-link"><span class="text">HOME</span></a>
+                                            <a href="<?= url() ?>" class="item-link"><span class="text">HOME</span></a>
                                         </li>
                                         <li class="menu-item">
-                                            <a href="shop.php" class="item-link"><span class="text">SHOP</span></a>
+                                            <a href="<?= url('shop') ?>" class="item-link"><span class="text">SHOP</span></a>
                                         </li>
                                         <li class="menu-item">
-                                            <a href="product-detail.php" class="item-link"><span class="text">PRODUCT</span></a>
+                                            <a href="<?= url('shop') ?>" class="item-link"><span class="text">PRODUCT</span></a>
                                         </li>
                                         <li class="menu-item">
-                                            <a href="blog.php" class="item-link"><span class="text">BLOG</span></a>
+                                            <a href="<?= url('blog') ?>" class="item-link"><span class="text">BLOG</span></a>
                                         </li>
                                         <li class="menu-item position-relative">
                                             <a href="#" class="item-link">
@@ -109,12 +109,11 @@
                                             </a>
                                             <div class="sub-menu sub-menu_v2">
                                                 <ul class="sub-menu_list">
-                                                    <li><a href="about.php" class="sub-menu_link"><span class="text">About</span></a></li>
-                                                    <li><a href="contact.php" class="sub-menu_link"><span class="text">Contact</span></a></li>
-                                                    <li><a href="faq.php" class="sub-menu_link"><span class="text">FAQs</span></a></li>
-                                                    <li><a href="privacy-policy.php" class="sub-menu_link"><span class="text">Privacy Policy</span></a></li>
-                                                    <li><a href="term-of-service.php" class="sub-menu_link"><span class="text">Term of Service</span></a></li>
-                                                    <li><a href="404.php" class="sub-menu_link"><span class="text">404</span></a></li>
+                                                    <li><a href="<?= url('about') ?>" class="sub-menu_link"><span class="text">About</span></a></li>
+                                                    <li><a href="<?= url('contact') ?>" class="sub-menu_link"><span class="text">Contact</span></a></li>
+                                                    <li><a href="<?= url('faqs') ?>" class="sub-menu_link"><span class="text">FAQs</span></a></li>
+                                                    <li><a href="<?= url('privacy-policy') ?>" class="sub-menu_link"><span class="text">Privacy Policy</span></a></li>
+                                                    <li><a href="<?= url('terms-of-service') ?>" class="sub-menu_link"><span class="text">Term of Service</span></a></li>
                                                 </ul>
                                             </div>
                                         </li>
@@ -136,15 +135,15 @@
                                         <a href="#modalSearch" data-bs-toggle="modal" class="nav-icon-item fw-normal"><i class="icon icon-Search"></i></a>
                                     </li>
                                     <li class="sm-d-none">
-                                        <a href="login.php" class="nav-icon-item fw-normal"><i class="icon icon-UserCircle"></i></a>
+                                        <a href="<?= url('login') ?>" class="nav-icon-item fw-normal"><i class="icon icon-UserCircle"></i></a>
                                     </li>
                                     <li>
-                                        <a href="wishlist.php" class="nav-icon-item fw-normal"><i class="icon icon-Hearth"></i></a>
+                                        <a href="<?= url('wishlist') ?>" class="nav-icon-item fw-normal"><i class="icon icon-Hearth"></i></a>
                                     </li>
                                     <li>
                                         <a href="#shoppingCart" data-bs-toggle="offcanvas" class="nav-icon-item shop-cart fw-medium">
                                             <i class="icon icon-ShoppingCart"></i>
-                                            <span class="number-order text-body-xs">1</span>
+                                            <span class="number-order text-body-xs" <?= empty($_SESSION['cart']) ? 'style="display:none"' : '' ?>><?= array_sum(array_column($_SESSION['cart'] ?? [], 'quantity')) ?></span>
                                         </a>
                                     </li>
                                 </ul>

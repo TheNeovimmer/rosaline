@@ -73,9 +73,9 @@ class AccountController extends Controller
             return;
         }
 
-        Wishlist::toggle(Auth::id(), $productId);
+        $added = Wishlist::toggle(Auth::id(), $productId);
 
-        $this->json(['success' => true]);
+        $this->json(['success' => true, 'added' => $added]);
     }
 
     public function removeFromWishlist(): void
